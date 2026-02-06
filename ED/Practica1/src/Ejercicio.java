@@ -5,7 +5,8 @@ public class Ejercicio {
 
         String divisores = "";
 
-        for(int i = 1 ; i < numero; i++){
+        //También podría haber llegado hasta la raiz cuadrada y tener el divisor y el cociente
+        for(int i = 2 ; i <= numero/2; i++){
             if(numero % i == 1){
                 divisores += i + " ,";
             }
