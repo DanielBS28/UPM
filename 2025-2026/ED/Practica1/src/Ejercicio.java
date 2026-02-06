@@ -7,14 +7,17 @@ public class Ejercicio {
 
         //También podría haber llegado hasta la raiz cuadrada y tener el divisor y el cociente
         for(int i = 2 ; i <= numero/2; i++){
-            if(numero % i == 1){
-                divisores += i + " ,";
+            if(numero % i == 0){
+                divisores += i + ", ";
             }
         }
-        if(divisores != "")
-            divisores = divisores.substring(0, divisores.length()-2);
+        if(divisores != "") {
+            divisores = divisores.substring(0, divisores.length() - 2);
+            System.out.println("El número " + numero +" tiene los siguientes divisores: " + divisores);
+        }
+        else
+            System.out.println("El número " + numero + " no tiene divisores");
 
-        System.out.println("El número " + numero +" tiene los siguientes divisores: " + divisores);
     }
 
     public static void main(String[] agrs) {
