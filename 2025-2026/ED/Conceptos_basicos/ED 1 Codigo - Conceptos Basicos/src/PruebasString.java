@@ -5,6 +5,7 @@ class PruebasString {
         String otraCadena = new String("desleal");
         String cadenaTotal = cadena + " " + otraCadena;
         System.out.println(cadenaTotal + ": comienza por " + cadenaTotal.charAt(0));
+        int posicion = cadenaTotal.indexOf("pe");
         System.out.println(cadenaTotal + ": la posición de 'pe' es " + cadenaTotal.indexOf("pe"));
         System.out.println(cadenaTotal + ": caracteres 5 al 8 es " + cadenaTotal.substring(5,8));
         int numLetrasE = 0;
@@ -14,5 +15,11 @@ class PruebasString {
             }
         }
         System.out.println(cadenaTotal + ": tiene " + numLetrasE + " letras e");
+
+        if(posicion != 1){
+            System.out.println(cadenaTotal + ": la posición de 'pe' es " + posicion);
+        }
+
     }
+
 }

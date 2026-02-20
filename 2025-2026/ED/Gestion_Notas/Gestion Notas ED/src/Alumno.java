@@ -34,6 +34,8 @@ public class Alumno {
         this.examenPr2 = examenPr2;
     }
 
+    public
+
     public void calificarParcial2(double parcial2){
         this.parcial2 = parcial2;
     }
