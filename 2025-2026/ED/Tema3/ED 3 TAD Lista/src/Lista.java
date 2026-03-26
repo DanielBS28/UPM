@@ -148,4 +148,31 @@ public class Lista {
             }
     }
 
+    public void aniadirSumaMayoresDe(int dato){
+
+        if(inicio == null){
+            Nodo nuevo = new Nodo(dato, null);
+            inicio = nuevo;
+        }else{
+            Nodo actual = inicio;
+            int suma = 0;
+            while(actual != null){
+                if(actual.getDato() > dato)
+                    suma += actual.getDato();
+                actual = actual.getSiguiente();
+            }
+
+            Nodo nuevo = new Nodo(suma, null); // PODRÍA HABER PUESTO EN VEZ DE NULL: INICIO
+            nuevo.setSiguiente(inicio);
+            inicio = nuevo;
+
+            // PODRÍA HABER PUESTO
+            // inicio = new Nodo(suma, inicio); el mismo codigo de antes pero en una sola línea.
+
+        }
+
+        numElementos++;
+
+    }
+
 }
