@@ -175,4 +175,18 @@ public class Lista {
 
     }
 
+    public void triplicar(){
+
+        Nodo actual = inicio;
+        while(actual != null){
+            //Tratar nodo
+
+            Nodo nuevo1 = new Nodo(actual.getDato(),actual.getSiguiente());
+            Nodo nuevo2 = new Nodo(actual.getDato(), nuevo1);
+            actual.setSiguiente(nuevo2);
+            actual = nuevo1.getSiguiente();
+            numElementos += 2;
+        }
+    }
+
 }

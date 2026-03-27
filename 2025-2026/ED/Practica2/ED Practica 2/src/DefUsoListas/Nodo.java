@@ -5,10 +5,10 @@ package DefUsoListas;
 
 public class Nodo {
 
-	private int dato;
+	private Evaluacion dato;
 	private Nodo siguiente;
 
-	public Nodo(int dato, Nodo siguiente) {
+	public Nodo(Evaluacion dato, Nodo siguiente) {
 		this.dato = dato;
 		this.siguiente = siguiente;
 	}
@@ -21,11 +21,11 @@ public class Nodo {
 		this.siguiente = siguiente;
 	}
 
-	public int getDato() {
+	public Evaluacion getDato() {
 		return dato;
 	}
 
-	public void setDato(int dato) {
+	public void setDato(Evaluacion dato) {
 		this.dato = dato;
 	}
 }

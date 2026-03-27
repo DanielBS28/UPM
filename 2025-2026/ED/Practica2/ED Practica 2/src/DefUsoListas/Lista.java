@@ -22,7 +22,7 @@ public class Lista {
     }
 
     // A�ade un nuevo dato al final de la lista
-    public void insertar(int dato) {
+    public void insertar(Evaluacion dato) {
         Nodo nuevo = new Nodo(dato, null);  // Crear un nodo nuevo
         if (inicio == null) {  // Insertar el nodo al final de la lista enlazada
             inicio = nuevo;
@@ -36,9 +36,9 @@ public class Lista {
 
     // Devuelve el elemento que ocupa una posicion dada.
     // Si no existe la posici�n, devuelve -1
-    public int getElemento(int posicion) {
+    public Evaluacion getElemento(int posicion) {
         if (posicion < 0 || posicion >= numElementos) {
-            return -1;
+            return null;
         } else {
             // Avanzar en la lista enlazada tantos nodos como indique posicion
             Nodo actual = inicio;
@@ -51,7 +51,7 @@ public class Lista {
 
     // Almacena elemento en la posicion indicada por posicion
     // Si la posici�n es incorrecta, devuelve false
-    public boolean setElemento(int dato, int posicion) {
+    public boolean setElemento(Evaluacion dato, int posicion) {
         if (posicion < 0 || posicion >= numElementos) {
             return false;
         } else {
@@ -65,10 +65,10 @@ public class Lista {
     }
 
     // Borra la primera ocurrencia del parámetro dato (si existe)
-    public boolean borrar(int dato) {
+    public boolean borrar(Evaluacion dato) {
         Nodo actual = inicio;
         Nodo anterior = null;
-        while (actual != null && actual.getDato() != dato) {
+        while (actual != null && !actual.getDato().mismaEvaluacion(dato)) {
             anterior = actual;
             actual = actual.getSiguiente();
         }
@@ -89,10 +89,10 @@ public class Lista {
     }
 
     // Devuelve la primera posición en la que se encuentra el parámetro dato (si existe)
-    public int posicion(int dato) {
+    public int posicion(Evaluacion dato) {
         Nodo actual = inicio;
         int posicion = 0;
-        while (actual != null && actual.getDato() != dato) {
+        while (actual != null && !actual.getDato().mismaEvaluacion(dato)) {
             actual = actual.getSiguiente();
             posicion++;
         }
@@ -103,8 +103,8 @@ public class Lista {
         }
     }
 
-    // Determina si el parámetro dato existe en la lista.
-    public boolean contiene(int dato) {
+    // Determina si el parámetro dato existe en la lista. //probablemente distinto de null
+    public boolean contiene(Evaluacion dato) {
         return this.posicion(dato) >= 0;
     }
 
