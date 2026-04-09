@@ -189,4 +189,39 @@ public class Lista {
         }
     }
 
+    //Ejercicio 2.7
+
+    public void insertarAcontinuacion(int base, int num_insertar){
+
+        Nodo actual = this.inicio;
+
+        while(actual != null){
+            if(actual.getDato() != base){
+                actual = actual.getSiguiente();
+            }else{
+
+                Nodo nuevo = new Nodo(num_insertar, actual.getSiguiente());
+                actual.setSiguiente(nuevo);
+                numElementos++;
+                actual = nuevo.getSiguiente();
+            }
+        }
+
+    }
+
+    //Ejercicio 2.3
+
+    public void imagenEspecular(){
+
+        Nodo actual = inicio;
+
+        while(actual != null){
+            Nodo nuevo = new Nodo(actual.getDato(), inicio);
+            inicio = nuevo;
+            numElementos++;
+            actual = actual.getSiguiente();
+        }
+
+    }
+
 }
