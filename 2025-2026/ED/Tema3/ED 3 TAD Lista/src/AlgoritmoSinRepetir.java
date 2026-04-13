@@ -81,6 +81,14 @@ public class AlgoritmoSinRepetir {
 
         System.out.println(lista3.toString());
         System.out.println(sinRepetir(lista3).toString());
+
+        int datos[] = new int[]{1,4,6,3,2,5};
+
+        int suma = 0;
+        for(int i : datos)
+            suma += i;
+
+        System.out.println(suma);
     }
 
 }

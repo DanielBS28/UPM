@@ -224,4 +224,30 @@ public class Lista {
 
     }
 
+    // Ejercicio 2.9
+    public boolean contieneReorganizable(int valor){
+
+        boolean encontrado = false;
+        Nodo actual = inicio;
+        Nodo anterior = null;
+        while(actual != null && actual.getDato() != valor){
+            anterior = actual;
+            actual = actual.getSiguiente();
+
+        }
+        if(actual != null){
+
+            if(actual != inicio){
+                // ¡Si el objeto es NULL no se pueden ejecutar métodos!
+                anterior.setSiguiente(actual.getSiguiente());
+                actual.setSiguiente(inicio);
+                inicio = actual;
+            }
+
+            return true;
+        }else
+            return false;
+
+    }
+
 }
