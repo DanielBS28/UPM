@@ -28,23 +28,45 @@ public class HTML {
     }
 
     public static boolean esApertura(String palabra) {
-        // TODO
-        return false;  // Eliminar esta línea
+        return palabra.length() >= 3 && palabra.charAt(0) == '<' && palabra.charAt(palabra.length() - 1) == '>' && palabra.charAt(1) != '/';
     }
 
     public static boolean esCierre(String palabra) {
-        // TODO
-        return false;  // Eliminar esta línea
+        return palabra.length() >= 4 && palabra.charAt(0) == '<' && palabra.charAt(1) == '/' && palabra.charAt(palabra.length() - 1) == '>';
     }
 
     public static boolean emparejadas(String apertura, String cierre) {
-        // TODO
-        return false;  // Eliminar esta línea
+        String palabraApertura = "</" + apertura.substring(1);
+
+        return palabraApertura.equals(cierre);
     }
 
     public static boolean comprobarHTML(Fichero fichero) {
-        // TODO
-        return false;  // Eliminar esta línea
+        Pila pila = new Pila();
+        String []linea = null;
+        int contadorLinea = 1;
+
+        while((linea = fichero.leerLinea()) != null){
+
+            for (int i = 0; i< linea.length; i++){
+                if (esApertura(linea[i]))
+                    pila.apilar(linea[i]);
+                else if (esCierre(linea[i])) {
+                    if(pila.vacia() || !emparejadas(pila.desapilar(), linea[i])){
+                        System.out.println("Error en la línea: " + contadorLinea + " al leer " + linea[i]);
+                        return false;
+                    }
+                }
+                contadorLinea++;
+            }
+        }
+        // Si al terminar de leer el fichero la pila no está vacía, faltan cierres
+        if (!pila.vacia()) {
+            System.out.println("Final de fuente inesperado");
+            return false;
+        }
+
+        return true; // El fichero HTML está perfectamente anidado
     }
 
     public static boolean comprobarHTMLStack(Fichero fichero) {
