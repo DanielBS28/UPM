@@ -57,8 +57,8 @@ public class HTML {
                         return false;
                     }
                 }
-                contadorLinea++;
             }
+            contadorLinea++;
         }
         // Si al terminar de leer el fichero la pila no está vacía, faltan cierres
         if (!pila.vacia()) {
@@ -70,8 +70,32 @@ public class HTML {
     }
 
     public static boolean comprobarHTMLStack(Fichero fichero) {
-        // TODO
-        return false;  // Eliminar esta línea
+        Stack<String> pila = new Stack<>();
+        String[] linea;
+        int numLinea = 1;
+
+        while ((linea = fichero.leerLinea()) != null) {
+
+            for (String palabra : linea) {
+                if (esApertura(palabra)) {
+                    pila.push(palabra);
+                }
+                else if (esCierre(palabra)) {
+                    if (pila.isEmpty() || !emparejadas(pila.pop(), palabra)) {
+                        System.out.println("Error en linea " + numLinea + " al leer " + palabra);
+                        return false;
+                    }
+                }
+            }
+            numLinea++;
+        }
+
+        if (!pila.isEmpty()) {
+            System.out.println("Final de fuente inesperado");
+            return false;
+        }
+
+        return true;
     }
 
 
