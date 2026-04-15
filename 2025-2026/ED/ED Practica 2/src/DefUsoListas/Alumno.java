@@ -33,28 +33,98 @@ public class Alumno {
 	}
 
 	public boolean nuevaEvaluacion(Evaluacion evaluacion) {
-		// TODO
-		return false;  // Eliminar esta línea
+
+		Iterador iterador = expediente.getIterador();
+
+		while(iterador.hasNext()){
+
+			Evaluacion EvaluacionActual = iterador.next();
+
+			if(EvaluacionActual.mismaEvaluacion(evaluacion)){
+				if(EvaluacionActual.getNota() == evaluacion.getNota())
+					return true;
+				else {
+					System.out.println("Calificación previamente insertada con nota: " + EvaluacionActual.getNota());
+					return false;
+				}
+			}
+		}
+			expediente.insertar(evaluacion);
+
+		return true;
 	}
 
 	public boolean estaAprobado(String nombreAsig) {
-		// TODO
-		return false;  // Eliminar esta línea
+		Iterador iterador = expediente.getIterador();
+		boolean aprobado = false;
+
+		while (iterador.hasNext() && !aprobado) {
+
+			Evaluacion evaluacionActual = iterador.next();
+
+			if (evaluacionActual.getNombreAsignatura().equals(nombreAsig) && evaluacionActual.getNota() >= 5.0) {
+				aprobado = true;
+			}
+		}
+		return aprobado;
 	}
 
 	public Lista asignaturasAprobadas() {
-		// TODO
-		return null;  // Eliminar esta línea
+
+		Iterador iterador = expediente.getIterador();
+		Lista asignaturasAprobadas = new Lista();
+
+		while (iterador.hasNext()){
+
+			Evaluacion evaluacionActual = iterador.next();
+
+			if (evaluacionActual.getNota() >= 5)
+				asignaturasAprobadas.insertar(evaluacionActual);
+		}
+		return asignaturasAprobadas;
 	}
 
 	public double mediaAprobadas() {
-		// TODO
-		return 0;  // Eliminar esta línea
+
+		/* Opción sin usar asignaturass aprobadas
+		double media = 0;
+		int aprobadas = 0;
+
+		Iterador iterador = expediente.getIterador();
+
+		while (iterador.hasNext()){
+
+			Evaluacion evaluacionActual = iterador.next();
+			if(evaluacionActual.getNota() >= 5){
+				aprobadas++;
+				media += evaluacionActual.getNota();
+			}
+		}
+
+		if(aprobadas != 0)
+			media /= aprobadas;
+
+		return media;*/
+
+		double media = 0;
+		Lista listaAprobadas = asignaturasAprobadas();
+		int cantidadAprobadas = listaAprobadas.getNumElementos();
+
+		if (cantidadAprobadas  == 0)
+			return media;
+
+		Iterador iterador = listaAprobadas.getIterador();
+
+		while (iterador.hasNext())
+			media += iterador.next().getNota();
+
+		return media/cantidadAprobadas;
+
 	}
 
 	public int getNumAprobadas() {
-		// TODO
-		return 0;  // Eliminar esta línea
+
+		return this.asignaturasAprobadas().getNumElementos();  // Eliminar esta línea
 	}
 
 	public void mostrar() {

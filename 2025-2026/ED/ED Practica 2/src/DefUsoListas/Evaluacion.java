@@ -28,6 +28,7 @@ public class Evaluacion {
 	}
 
 	public void mostrar() {
+
 		if (nota >= 0.0) {
 			System.out.println("    " + nombreAsignatura + " (" + convocatoria + "): " + nota);
 		} else {
@@ -39,4 +40,6 @@ public class Evaluacion {
 		return this.convocatoria.equals(ev.convocatoria)
 				&& this.nombreAsignatura.equals(ev.nombreAsignatura);
 	}
+
+
 }
