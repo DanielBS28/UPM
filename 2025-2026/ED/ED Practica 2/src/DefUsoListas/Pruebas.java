@@ -74,6 +74,22 @@ public class Pruebas {
 
     }
 
+    public static void apartado7() {
+
+        System.out.println("\n----------- MOSTRAR LOS ALUMNOS BIBLIOTECA ------------");
+
+        AlumnoBib eduardo = new AlumnoBib("Eduardo Parra Martín", 8765);
+        AlumnoBib sonia = new AlumnoBib("Sonia Torres Pardo", 2345);
+
+        eduardo.nuevaEvaluacion(new Evaluacion("ED", "Junio 19", 4.5));
+        eduardo.nuevaEvaluacion(new Evaluacion("ED", "Julio 19", -1));
+        eduardo.nuevaEvaluacion(new Evaluacion("ED", "Junio 20", 7.4));
+        eduardo.nuevaEvaluacion(new Evaluacion("Algebra", "Junio 18", 6.4));
+
+        eduardo.mostrar();
+        sonia.mostrar();
+    }
+
     public static void main(String[] args) {
         System.out.println("********** PRUEBAS **********");
         
@@ -84,7 +100,7 @@ public class Pruebas {
         apartado5(lista);
         apartado6(lista);
         apartado6_7();
-
+        apartado7();
 
     }
 
