@@ -30,7 +30,7 @@ public class Pruebas {
     public static void apartado6(Lista lista) {
 
         Evaluacion evaluacion5 = new Evaluacion("Fundamentos de programación", "Enero 26", -1);
-        String [] NombresEvaluaciones = new String[]{"ED","Algebra","Fundamentos de programación"};
+        String[] NombresEvaluaciones = new String[]{"ED", "Algebra", "Fundamentos de programación"};
 
         System.out.println("\n------------ Apartado 5.1 -----------\n");
         for (String s : NombresEvaluaciones)
@@ -38,15 +38,55 @@ public class Pruebas {
 
     }
 
+    public static void apartado6_7() {
+
+        System.out.println("\n------------ Apartado 6.7 -----------\n");
+
+
+        Alumno felipe = new Alumno("Felipe García Gómez", 1253);
+        Alumno alicia = new Alumno("Alicia Blázquez Martín", 5622);
+
+        felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 19", 4.5));
+        felipe.nuevaEvaluacion(new Evaluacion("ED", "Julio 19", -1));
+        felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 20", 7.4)); // Usamos Junio 20 para que cuadre con la salida del PDF
+        felipe.nuevaEvaluacion(new Evaluacion("Algebra", "Junio 18", 6.4));
+
+        felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 20", 3));
+
+        System.out.println("--------- Asignaturas aprobadas por " + felipe.getNombre() + " ---------");
+        Lista aprobadasFelipe = felipe.asignaturasAprobadas();
+        Iterador iterador = aprobadasFelipe.getIterador();
+
+        while (iterador.hasNext())
+            iterador.next().mostrar();
+
+        Lista aprobadasAlicia = alicia.asignaturasAprobadas();
+        Iterador iteradorAlicia = aprobadasAlicia.getIterador();
+        System.out.println("--------- Asignaturas aprobadas por " + alicia.getNombre() + " ---------");
+
+        while (iteradorAlicia.hasNext()) {
+            iteradorAlicia.next().mostrar();
+        }
+
+        System.out.println("----------- MOSTRAR LOS ALUMNOS ------------");
+        felipe.mostrar();
+        alicia.mostrar();
+
+    }
 
     public static void main(String[] args) {
         System.out.println("********** PRUEBAS **********");
+        
+        // Nota: He estructurado el metodo main en funciones separadas para facilitar la
+        // visualización y corrección de las pruebas de cada apartado.
 
         Lista lista = new Lista();
         apartado5(lista);
         apartado6(lista);
+        apartado6_7();
 
 
     }
+
 
 }
