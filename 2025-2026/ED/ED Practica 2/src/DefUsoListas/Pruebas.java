@@ -1,5 +1,5 @@
 /**
- * @author Nombre y apellidos
+ * @author Daniel Baldazo Sánchez
  *
  */
 
@@ -48,7 +48,7 @@ public class Pruebas {
 
         felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 19", 4.5));
         felipe.nuevaEvaluacion(new Evaluacion("ED", "Julio 19", -1));
-        felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 20", 7.4)); // Usamos Junio 20 para que cuadre con la salida del PDF
+        felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 20", 7.4));
         felipe.nuevaEvaluacion(new Evaluacion("Algebra", "Junio 18", 6.4));
 
         felipe.nuevaEvaluacion(new Evaluacion("ED", "Junio 20", 3));

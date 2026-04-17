@@ -128,7 +128,7 @@ public class AlumnoBib {
 
     public int getNumAprobadas() {
 
-        return this.asignaturasAprobadas().getNumElementos();  // Eliminar esta línea
+        return this.asignaturasAprobadas().getNumElementos();
     }
 
     public void mostrar() {
