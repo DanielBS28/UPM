@@ -14,7 +14,7 @@ public class PruebasLista {
                 positivos += 1;
             }
         }
-        System.out.println("El número de positivos es: " + positivos);
+        System.out.println("El nÃºmero de positivos es: " + positivos);
 
         Iterador iterador = lista.getIterador();
         positivos = 0;
@@ -25,7 +25,7 @@ public class PruebasLista {
                 positivos++;
             }
         }
-        System.out.println("Con iterador. El número de positivos es: " + positivos);
+        System.out.println("Con iterador. El nÃºmero de positivos es: " + positivos);
     }
 
 

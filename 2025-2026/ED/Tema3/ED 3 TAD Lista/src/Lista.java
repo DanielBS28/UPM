@@ -144,7 +144,7 @@ public class Lista {
                     actual.setSiguiente(nuevoNodo);
                     actual = nuevoNodo.getSiguiente();
                 }else
-                    actual.getSiguiente();
+                    actual = actual.getSiguiente();
             }
     }
 
@@ -248,6 +248,73 @@ public class Lista {
         }else
             return false;
 
+    }
+
+    public void eliminarRepetidos(int dato) {
+
+        // 1. Caso base: Si la lista está vacía, no hay nada que hacer.
+        if (this.inicio == null) {
+            return;
+        }
+
+        // 2. Variables de control
+        boolean encontrado = false;
+        Nodo actual = this.inicio;
+        Nodo anterior = null;
+
+        // 3. Recorremos la lista hasta llegar al final (null)
+        while (actual != null) {
+
+            // ¿El nodo actual tiene el número que buscamos?
+            if (actual.getDato() == dato) {
+
+                if (!encontrado) {
+                    // Es la PRIMERA vez. Lo marcamos y lo perdonamos.
+                    encontrado = true;
+                    anterior = actual; // El anterior avanza normalmente
+                } else {
+                    // Ya lo habíamos visto. ¡Toca borrarlo!
+                    // Hacemos que el nodo anterior apunte al nodo que va después del actual,
+                    // "saltándonos" el nodo actual y dejándolo desconectado.
+                    anterior.setSiguiente(actual.getSiguiente());
+
+                    // IMPORTANTE: Actualizamos el tamaño de la lista
+                    this.numElementos--;
+
+                    // OJO AQUÍ: Cuando borramos, NO movemos el puntero 'anterior'.
+                    // Se queda apuntando donde estaba, esperando al siguiente ciclo.
+                }
+
+            } else {
+                // Si no es el número que buscamos, los punteros avanzan normalmente
+                anterior = actual;
+            }
+
+            // El puntero actual SIEMPRE avanza para seguir explorando la lista
+            actual = actual.getSiguiente();
+        }
+
+        /*OTRA ALTERNATIVA
+
+        // OJO: Forma alternativa usando solo un puntero
+Nodo actual = this.inicio;
+
+while (actual != null && actual.getSiguiente() != null) {
+
+    // Miramos el dato del nodo que va DESPUÉS del nuestro
+    if (actual.getSiguiente().getDato() == dato) {
+
+        // Hacemos el puente saltándonos el siguiente
+        actual.setSiguiente(actual.getSiguiente().getSiguiente());
+        this.numElementos--;
+
+    } else {
+        // Solo avanzamos si no hemos borrado nada
+        actual = actual.getSiguiente();
+    }
+}
+        *
+        * */
     }
 
 }

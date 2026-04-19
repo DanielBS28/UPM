@@ -8,16 +8,17 @@ public class ejercicio1 {
 
         while (iterador.hasNext() && !repetido){
             int elemento = iterador.next();
-                if(distintos.contiene(elemento))
+                if(distintos.contiene(elemento)) //Comparo con la lista de elementos distintos(Si está ahí entonces es un elemento repetido.
                     repetido = true;
                 else
-                    distintos.insertar(elemento);
+                    distintos.insertar(elemento); //Los que sean distinto me los guardo en una lista Auxiliar
         }
         return repetido;
     }
 
     public static boolean SonDistintos2(Lista lista){
 
+        //Comparo con una función que me devuelve una lista de no repetidos, si el tamaño es igual al de la lista que le paso a la función SonDistintos2 entonces no hay repetidos.
        return  AlgoritmoSinRepetir.sinRepetir(lista).getNumElementos() == lista.getNumElementos();
     }
 
