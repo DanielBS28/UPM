@@ -4,9 +4,11 @@ public class Ejercicio5 {
 
         Pila pila = new Pila();
 
+        //Apilo en una pila los datos de la cola
         while (!cola.vacia())
             pila.apilar(cola.desencolar());
 
+        //Encolo los datos de la pila para darle la vuelta a la cola
         while(!pila.vacia())
             cola.encolar(pila.desapilar());
 

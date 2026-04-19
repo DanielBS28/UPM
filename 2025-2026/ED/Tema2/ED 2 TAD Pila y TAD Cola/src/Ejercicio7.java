@@ -4,14 +4,17 @@ public class Ejercicio7 {
 
         Pila pila = new Pila();
 
+        //Mientras haya elementos en las dos colas
         while(!cola1.vacia() && !cola2.vacia()){
 
+            //Si el primer elemento de la cola1 es mayor que el de la cola2 es mayor, se apila en nuestra cola ese elemento
             if(cola1.getPrimero() > cola2.getPrimero())
                 pila.apilar(cola1.desencolar());
-            else
+            else //Si no es que el de la cola2 era mayor
                 pila.apilar(cola2.desencolar());
         }
 
+        //Una de las dos colas se ha tenido que vaciar si me salí del while... en estos dos while rellene la cola a devolver
         while(!cola1.vacia())
             pila.apilar(cola1.desencolar());
 

@@ -20,11 +20,13 @@ public class Ejercicio4 {
         Pila pila = new Pila();
         boolean palindromo = true;
 
+        //Le doy la vuelta con una pila a la frase
         for (int i = 0; i < cadena.length(); i++) {
             pila.apilar(cadena.charAt(i));
         }
 
         int i =0;
+        //Compruebo la cadena con la pila ya que está al reves
         while (i < cadena.length()&& palindromo){
 
             if(cadena.charAt(i) != pila.desapilar())

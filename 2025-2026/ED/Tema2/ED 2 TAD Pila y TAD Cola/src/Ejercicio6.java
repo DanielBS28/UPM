@@ -28,9 +28,10 @@ public class Ejercicio6 {
 
     public static int posicionCola(Cola cola, int valor){
 
-        int posicion = 1;
+        int posicion = -1;
         boolean encontrado = false;
 
+        //con i< cola.getNumElementos() siempre voy a dar la vuelta entera a la cola reccoriendola siempre y cuando encole de nuevo los elementos si no podría tener fallos.
         for(int i = 0; i< cola.getNumElementos(); i++){
 
             int elem = cola.desencolar();
@@ -39,6 +40,7 @@ public class Ejercicio6 {
                 encontrado = true;
             }
 
+            //SIEMPRE HAY QUE ENCOLAR, si uso cola.getNumElementos(), otra opción seria quedarse con el tamaño original desde el principio.
             cola.encolar(elem);
         }
         return posicion;

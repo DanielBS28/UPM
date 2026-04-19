@@ -7,15 +7,18 @@ public class ejercicio3 {
 
             Cola cola = new Cola();
 
+            //Encolo los k primeros números y hago su suma.
             for (int i = 0; i < k; i++) {
                 cola.encolar(array[i]);
                 peso += array[i];
             }
 
+            //Empezando en i = k (los posteriores a los k primeros, desencolo el primero y se los resto a una variable auxiliar donde tenia el peso y el array con un nuevo número)
             for (int i = k; i < array.length; i++) {
                 int primero = cola.desencolar();
                 aux = peso + array[i] - primero;
 
+                //Si el auxiliar es > peso entonces peso = aux
                         if(aux > peso)
                             peso = aux;
             }

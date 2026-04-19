@@ -7,12 +7,14 @@ public class Ejercicio2 {
 
         for(int i = datos.length-1; i>=0; i--){
 
+            //Empiezo por el final a ver los datos del array y comparándolos con el anterior
             if(datos[i] <= tope){
                 pila.apilar(datos[i]);
                 tope = datos[i];
             }
         }
 
+        //Los desapilo para que salgan en el mismo orden que el array
             while(!pila.vacia()){
                 System.out.println(pila.desapilar());
             }
