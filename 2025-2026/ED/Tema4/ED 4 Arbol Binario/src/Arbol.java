@@ -138,5 +138,73 @@ public class Arbol {
         return resultado;
     }
 
+    //Ejercicio 1, apartado a.
+
+    public int numDatos(){
+        return numDatosRec(raiz);
+    }
+
+    private int numDatosRec(NodoArbol raiz) {
+
+        if(raiz == null)
+            return 0;
+        else
+            return 1 + numDatosRec(raiz.getDerecho()) + numDatosRec(raiz.getIzquierdo());
+        //En cada llamada le sumo 1. Y cada vez que subo para arriba le devuelvo los que tenía abajo
+    }
+
+    //Ejercicio 1, apartado b.
+
+    public int numDatosIterativo() {
+        Cola cola = new Cola();
+        int contador = 0;
+        if (raiz != null) {
+            cola.encolar(raiz);
+            while (!cola.vacia()) {
+                NodoArbol nodo = cola.desencolar();
+                contador++;
+                if (nodo.getIzquierdo() != null) {
+                    cola.encolar(nodo.getIzquierdo());
+                }
+                if (nodo.getDerecho() != null) {
+                    cola.encolar(nodo.getDerecho());
+                }
+            }
+        }
+        return contador;
+    }
+
+    //Ejercicio 1, apartado d
+
+    public int numHojas(){
+        return numHojasRec(raiz);
+    }
+
+    private int numHojasRec(NodoArbol raiz) {
+        int resultado = 0;
+        if(raiz == null)
+            resultado = 0;
+        else {
+            if (raiz.getIzquierdo() == null && raiz.getDerecho() == null)
+                resultado = 1;
+            else
+                resultado = numHojasRec(raiz.getIzquierdo()) + numHojasRec(raiz.getDerecho());
+        }
+        return resultado;
+    }
+
+    //Ejercicio 1, apartado i
+    public int altura(){
+        return alturaRec(raiz);
+    }
+
+    private int alturaRec(NodoArbol raiz) {
+
+        if(raiz == null)
+            return 0;
+        else
+            return 1+ Math.max(alturaRec(raiz.getIzquierdo()), alturaRec(raiz.getDerecho()));
+    }
+
 
 }

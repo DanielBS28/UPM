@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Tema4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ED 4 Arbol Binario.zip!/" />
+      <root url="jar://$PROJECT_DIR$/ED 4 TAD Diccionario.zip!/" />
+      <root url="jar://$PROJECT_DIR$/ED 4 TAD Conjunto.zip!/" />
+      <root url="jar://$PROJECT_DIR$/ED 4 Arbol Binario de Busqueda.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -20,6 +20,11 @@ public class Pruebas {
         System.out.println("Está el valor valor 5?: " + arbol.contiene(5));
         System.out.println("Está el valor valor 51?: " + arbol.contiene(51));
 
+        System.out.println("El número de elementos del árbol es: " + arbol.numDatos());
+
+        System.out.println("La altura del árbol es: " + arbol.altura());
+
+
     }
 
 }
