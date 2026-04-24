@@ -24,6 +24,18 @@ public class Pruebas {
 
         System.out.println("La altura del árbol es: " + arbol.altura());
 
+        System.out.println("Los níveles del árbol son: ");
+        arbol.preOrdenNivel();
+
+        System.out.println("Altura del nivel: 2 -> " + arbol.sumaDatosNivel(2));
+        System.out.println("Altura del nivel: 3 -> " + arbol.sumaDatosNivel(3));
+        System.out.println("Altura del nivel: 9 -> " + arbol.sumaDatosNivel(9));
+        System.out.println("Altura del nivel: -4 -> " + arbol.sumaDatosNivel(-4));
+
+
+
+
+
 
     }
 

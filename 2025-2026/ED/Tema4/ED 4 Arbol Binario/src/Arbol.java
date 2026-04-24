@@ -206,5 +206,40 @@ public class Arbol {
             return 1+ Math.max(alturaRec(raiz.getIzquierdo()), alturaRec(raiz.getDerecho()));
     }
 
+    // Ejercicio 1, apartado g
+
+    public void preOrdenNivel() {
+        System.out.print("Preorden: ");
+        this.preOrdenNivelRec(raiz,1);
+        System.out.println();
+    }
+
+    private void preOrdenNivelRec(NodoArbol nodo, int nivel) {
+        if (nodo != null) {
+            System.out.println(nodo.getDato() + " en nivel: "+ nivel);
+            this.preOrdenNivelRec(nodo.getIzquierdo(), nivel+1);
+            this.preOrdenNivelRec(nodo.getDerecho(), nivel +1);
+        }
+    }
+
+    //Ejercicio 1 apartado h.
+
+    public int sumaDatosNivel(int nivel){
+
+        return sumaDatosNivelRec(nivel, raiz, 1);
+    }
+
+
+    public int sumaDatosNivelRec(int nivel, NodoArbol nodo, int nivelNodo){
+
+        if(nodo == null)
+            return 0;
+        else if (nivelNodo == nivel)
+            return nodo.getDato();
+        else // Nivel nodo < nivel
+            return sumaDatosNivelRec(nivel, nodo.getIzquierdo(), nivelNodo+1) +
+                    sumaDatosNivelRec(nivel, nodo.getDerecho(), nivelNodo+1);
+    }
+
 
 }
