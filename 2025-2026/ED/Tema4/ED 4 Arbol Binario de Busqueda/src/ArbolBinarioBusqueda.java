@@ -46,4 +46,59 @@ public class ArbolBinarioBusqueda {
 		return nodo;    // Devolver la nueva raíz del subárbol
 	}
 
+	//Ejercicio 4, apartado a
+	public void mostrarClavesDescendentes(){
+
+		mostrarClavesDescendentesRec(raiz);
+
+	}
+
+	private void mostrarClavesDescendentesRec(NodoArbol nodo) {
+
+		if(nodo  != null) {
+			this.mostrarClavesDescendentesRec(nodo.getDerecho());
+			System.out.print(nodo.getClave() + " ");
+			this.mostrarClavesDescendentesRec(nodo.getIzquierdo());
+		}
+	}
+
+	//Ejercicio 4, apartado b
+	public void mostrarUnHijoDescendentes(){
+
+		mostrarUnHijoDescendentesRec(raiz);
+
+	}
+
+	private void mostrarUnHijoDescendentesRec(NodoArbol nodo) {
+
+		if(nodo  != null) {
+			this.mostrarUnHijoDescendentesRec(nodo.getDerecho());
+			if((nodo.getIzquierdo() == null && nodo.getDerecho() != null) ||
+					(nodo.getIzquierdo() != null && nodo.getDerecho() == null))
+			System.out.print(nodo.getClave() + " ");
+			this.mostrarUnHijoDescendentesRec(nodo.getIzquierdo());
+		}
+	}
+
+	//Ejercicio 4 apartado a
+	public void mostrarClavesEntreDos(int menor, int mayor){
+		mostrarClavesEntreDosRec(raiz, menor, mayor);
+	}
+
+	private void mostrarClavesEntreDosRec(NodoArbol nodo, int menor, int mayor) {
+
+		if(nodo != null){
+			if(nodo.getClave() < menor)
+				mostrarClavesEntreDosRec(nodo.getDerecho(), menor, mayor);
+			else if(nodo.getClave() >= mayor){
+				mostrarClavesEntreDosRec(nodo.getIzquierdo(), menor , mayor);
+			}
+			else {
+				mostrarClavesEntreDosRec(nodo.getIzquierdo(), menor, mayor);
+				System.out.print(nodo.getClave() +" ");
+				mostrarClavesEntreDosRec(nodo.getDerecho(), menor, mayor);
+			}
+		}
+	}
+
 }
