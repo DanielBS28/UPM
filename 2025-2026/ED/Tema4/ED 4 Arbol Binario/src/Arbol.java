@@ -241,5 +241,42 @@ public class Arbol {
                     sumaDatosNivelRec(nivel, nodo.getDerecho(), nivelNodo+1);
     }
 
+    //Apartado l
+
+    public void invertir(){
+        invertirRec(this.raiz);
+    }
+
+    private void invertirRec(NodoArbol nodo) {
+
+        if(nodo == null){
+        }else {
+
+            //Intercambiar los hijos
+            NodoArbol aux = nodo.getDerecho();
+            nodo.setDerecho(nodo.getIzquierdo());
+            nodo.setIzquierdo(aux);
+
+            //Cambiar árboles de forma recursiva (El dibujo)
+            invertirRec(nodo.getIzquierdo());
+            invertirRec(nodo.getDerecho());
+        }
+    }
+
+    //Ejercicio 1 apartado m
+    public boolean esUnivalor(){
+        return esUnivalorRec(raiz, raiz.getDato());
+    }
+
+    private boolean esUnivalorRec(NodoArbol nodo, int dato) {
+
+        if(nodo == null)
+            return true;
+        else if(nodo.getDato() == dato)
+            return esUnivalorRec(nodo.getDerecho(),dato) && esUnivalorRec(nodo.getIzquierdo(),dato);
+        else
+            return false;
+    }
+
 
 }
