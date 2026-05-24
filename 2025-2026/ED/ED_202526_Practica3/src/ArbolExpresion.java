@@ -107,28 +107,125 @@ public class ArbolExpresion {
     // ------------------------------------------------------------------------
     public ArbolExpresion(String expr) {
         raiz = null;
+        Pila pila = new Pila();
+        expr = expr.replace(" ", "");
 
-        // TODO Ejercicio 1:
-        // Construir el árbol de expresión a partir de una cadena en notación
-        // postfija utilizando la estructura auxiliar Pila.
+        for (int i = 0; i < expr.length(); i++){
+            char c = expr.charAt(i);
+
+            //  Si el carácter es un operando (número o 'x')
+            if(Utilidades.esOperando(c)) {
+                NodoArbol nuevoNodo = new NodoArbol(c);
+                pila.apilar(nuevoNodo);
+            }//  Si el carácter es un operador (+, -, *, /)
+            else if (Utilidades.esOperador(c)) {
+                // Verificamos que haya al menos dos operandos en la pila para operar
+                if (pila.getNumElementos() < 2) {
+                    System.out.println("Hay un error en la expresión");
+                    return; // Detenemos la construcción del árbol
+                }
+
+                // El primer elemento extraído es el hijo DERECHO
+                NodoArbol hijoDerecho = pila.desapilar();
+                // El segundo elemento extraído es el hijo IZQUIERDO
+                NodoArbol hijoIzquierdo = pila.desapilar();
+
+                // Creamos el nodo operador y lo apilamos
+                NodoArbol nuevoNodo = new NodoArbol(c, hijoIzquierdo, hijoDerecho);
+                pila.apilar(nuevoNodo);
+            }// Si es un carácter inválido
+            else
+                System.out.println("Caracter " + c + " inválido");
+        }
+
+        // Verificación final de la estructura
+        if (pila.getNumElementos() == 1)
+            raiz = pila.desapilar();
+        else
+            System.out.println("Hay un error en la expresión");
+
     }
 
     // ------------------------------------------------------------------------
     // TODO Ejercicio 2
     // ------------------------------------------------------------------------
     public void mostrarExpresion() {
-        // TODO Ejercicio 2:
-        // Mostrar el contenido del árbol en notación infija.
+        if (raiz == null) {
+            return;
+        }
+
+        String resultado = obtenerExpresionRec(raiz);
+
+        if (resultado == null) {
+            // El árbol está mal formado. Al ser void, informamos por consola.
+            System.out.println("Error: El árbol de expresión está mal formado.");
+        } else {
+            // Si la raíz es un operador, el método recursivo habrá envuelto toda
+            // la expresión en paréntesis. El enunciado pide que la expresión
+            // completa NO esté envuelta, así que los eliminamos.
+            if (Utilidades.esOperador(raiz.getDato()) && resultado.startsWith("(") && resultado.endsWith(")")) {
+                resultado = resultado.substring(1, resultado.length() - 1);
+            }
+            System.out.println(resultado);
+        }
+    }
+
+    /**
+     * Método recursivo auxiliar para construir la cadena en notación infija.
+     * Realiza un recorrido de orden central (Izquierda - Raíz - Derecha).
+     * @return La expresión en formato String, o null si el subárbol está mal formado.
+     */
+    private String obtenerExpresionRec(NodoArbol nodo) {
+        if (nodo == null) {
+            return null;
+        }
+
+        boolean esOperando = Utilidades.esOperando(nodo.getDato());
+        boolean esOperador = Utilidades.esOperador(nodo.getDato());
+
+        // CASO BASE: Es un operando (hoja)
+        if (esOperando) {
+            // Validación: un operando no puede tener hijos
+            if (nodo.getIzquierdo() != null || nodo.getDerecho() != null) {
+                return null;
+            }
+            return String.valueOf(nodo.getDato());
+        }
+
+        // CASO RECURSIVO: Es un operador (nodo interno)
+        if (esOperador) {
+            // Validación: un operador necesita obligatoriamente dos operandos/hijos
+            if (nodo.getIzquierdo() == null || nodo.getDerecho() == null) {
+                return null;
+            }
+
+            String subExpresionIzq = obtenerExpresionRec(nodo.getIzquierdo());
+            String subExpresionDer = obtenerExpresionRec(nodo.getDerecho());
+
+            // Si alguna de las ramas falló, propagamos el null hacia arriba
+            if (subExpresionIzq == null || subExpresionDer == null) {
+                return null;
+            }
+
+            // Envolvemos la operación en paréntesis para mantener la precedencia
+            return "(" + subExpresionIzq + nodo.getDato() + subExpresionDer + ")";
+        }
+
+        // Si el carácter almacenado no es ni operando ni operador
+        return null;
     }
 
     // ------------------------------------------------------------------------
     // TODO Ejercicio 3
     // ------------------------------------------------------------------------
     public Double calcularValor() {
-        // TODO Ejercicio 3:
-        // Calcular el valor numérico de la expresión almacenada en el árbol.
-        return null;
+        //  Si el árbol está vacío, devolver 0
+        if (raiz == null) {
+            return 0.0;
+        }
+        return calcularValorRec(raiz);
     }
+
 
     /**
      * TODO Ejercicio 4
