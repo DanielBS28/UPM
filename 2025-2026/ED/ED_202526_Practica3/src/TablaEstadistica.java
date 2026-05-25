@@ -171,12 +171,73 @@ public class TablaEstadistica {
 		return datosTabla;
 	}
 
+	// Ejercicio 8: Búsqueda de proximidad en Árbol Binario de Búsqueda
+	public double consultarMasCercano(double clave) {
+		if (raiz == null) {
+			return 0.0;
+		}
+
+		//  método recursivo
+		NodoTablaEstadistica nodoMasCercano = consultarMasCercanoRec(raiz, clave);
+
+		return nodoMasCercano.getDato();
+	}
+
 	/**
-	 * TODO Ejercicio 8
+	 * Método recursivo que explora el ABB buscando la clave matemática más cercana.
+	 * @param nodo El nodo actual en evaluación.
+	 * @param claveBuscada El valor objetivo al que queremos aproximarnos.
+	 * @return El nodo cuya clave tiene la menor diferencia absoluta con la claveBuscada.
 	 */
-	public double consultarMasCercano(double z) {
-		// TODO Ejercicio 8:
-		// Devolver el valor asociado a la clave más cercana a z.
-		return 0.0;
+	private NodoTablaEstadistica consultarMasCercanoRec(NodoTablaEstadistica nodo, double claveBuscada) {
+		//  Caso Base: Se llega a una rama vacía
+		if (nodo == null) {
+			return null;
+		}
+
+		//  Coincidencia Exacta: Si la clave es idéntica, la distancia es 0.
+		// Es imposible encontrar un candidato mejor.
+		if (nodo.getClave() == claveBuscada) {
+			return nodo;
+		}
+
+		NodoTablaEstadistica mejorHijo = null;
+
+		//  Fase de Descenso
+		// Si el valor que buscamos es menor que la clave del nodo actual,
+		// la lógica del ABB dice que los valores más cercanos estarán a la izquierda.
+		if (claveBuscada < nodo.getClave()) {
+			mejorHijo = consultarMasCercanoRec(nodo.getIzquierdo(), claveBuscada);
+		} else {
+			// Si es mayor, estarán a la derecha.
+			mejorHijo = consultarMasCercanoRec(nodo.getDerecho(), claveBuscada);
+		}
+
+		// Fase de Retorno y Comparación:
+		// Si la llamada recursiva devolvió null, significa que el nodo actual es una hoja.
+		// Al no haber más descendientes, el nodo actual es el mejor candidato de esta rama.
+		if (mejorHijo == null) {
+			return nodo;
+		}
+
+		// Se calcula la distancia absoluta entre el objetivo y los dos candidatos:
+		// el nodo actual y el mejor nodo encontrado en las profundidades de sus hijos.
+		double distActual = Math.abs(nodo.getClave() - claveBuscada);
+		double distHijo = Math.abs(mejorHijo.getClave() - claveBuscada);
+
+		// 5. Resolución del ganador
+		if (distHijo < distActual) {
+			return mejorHijo;
+		} else if (distActual < distHijo) {
+			return nodo;
+		} else {
+			// Desempate: Si ambas distancias son exactamente iguales,
+			// el enunciado especifica que se debe devolver la clave de menor valor.
+			if (nodo.getClave() < mejorHijo.getClave()) {
+				return nodo;
+			} else {
+				return mejorHijo;
+			}
+		}
 	}
 }
