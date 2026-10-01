@@ -27,13 +27,17 @@ public class LecturaComandos {
             }
         }
 
-        System.out.println("Parque de atracciones - CITIM21_13");
+        System.out.println("""
+     ╔══════════════════════════════════════════════════════╗
+					║         Parque de atracciones - CITIM21_13           ║
+					╚══════════════════════════════════════════════════════╝
+        		""");
         String comandoActual = "";
 
         try {
             while ((comandoActual = obtenerSiguienteComando()) != null && !comandoActual.equalsIgnoreCase("exit")) {
-            	//TODO ANALIZAR EL COMANDO ACTUAL
-                System.out.println("Comando actual: " + comandoActual);
+            	//Analizamos el comando actual
+                GestorComandos.analizarComando(comandoActual);
             }
         } catch (IOException e) {
             System.err.println("Error de lectura: " + e.getMessage());
@@ -41,11 +45,22 @@ public class LecturaComandos {
 
         }
 
-        System.out.println("Bye!");     
+      finalizarPrograma();
         
     }
 
-    private static String obtenerSiguienteComando() throws IOException {
+   public  static void finalizarPrograma() {
+
+    	try {
+            System.out.println("Saliendo de la aplicación...");
+			Thread.sleep(2000);
+			 System.out.println("Se cerró la aplicación con exito");
+		} catch (InterruptedException e) {
+			System.out.println("Hubo un error en la pausa");
+		}
+	}
+
+	private static String obtenerSiguienteComando() throws IOException {
         if (ejecutandoPorFichero) {
             return lectorBuffer.readLine();
         } else {

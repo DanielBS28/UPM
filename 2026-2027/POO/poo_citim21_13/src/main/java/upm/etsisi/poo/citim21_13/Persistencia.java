@@ -14,9 +14,20 @@ import java.util.TreeMap;
 public class Persistencia {
 
 	public static TreeMap<String, Usuario> USUARIOS = new TreeMap<>();
+	
+	//Ruta al fichero persistencia
 	final static String rutaFicheroPersistencia = "persistencia.txt";
+	
+	/* Ruta final del archivo de persistencia, convertida a objeto del tipo Path 
+	 * para su uso en métodos estáticos de entrada/salida.
+	 */
 	final static Path ficheroPersistencia = Paths.get(rutaFicheroPersistencia);
 
+	
+	/*Método que crea un fichero de persistencia al principio de un 
+	 * programa en caso de que no exista el fichero, en caso de que exista, 
+	 * se mantiene el fichero tal cual estaba.
+	 */
 	public static void inicializar() {
 		File fichero = new File(rutaFicheroPersistencia);
 
@@ -35,6 +46,11 @@ public class Persistencia {
 		lecturaPersistencia();
 	}
 
+	
+	/*Al principio del programa, leemos el fichero persistencia para cargar 
+	 * los usuarios a nuestro treeMap y así poder usarlos durante la ejecución 
+	 * del programa.
+	 */
 	private static void lecturaPersistencia() {
 
 		String linea = "";
@@ -42,6 +58,8 @@ public class Persistencia {
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(rutaFicheroPersistencia));
 
+			
+			//Leemos línea a línea hasta el final del archivo, un usuario por cada línea se agrega al treeMap.
 			while ((linea = bf.readLine()) != null) {
 
 				String[] campos = linea.split(";");
@@ -67,18 +85,26 @@ public class Persistencia {
 
 	}
 
+	
+	/*Método que sobreescribe el fichero persistencia en caso de que haya algún 
+	 * cambio durante la ejecución del programa en algún usuario, 
+	 * dejando la persistencia lista para posteriores ejecuciones del programa. 
+	 */
 	public static void escribirPersistencia() {
 		Path fichero = ficheroPersistencia;
 
 		try {
 
+			//Esta sentencia sobreescribe el fichero persistencia dejándolo vacío.
 			Files.writeString(fichero, "");
 
+			//En el for, por cada usuario lo añadimos al archivo de persistencia en una línea nueva cada usuario.
 			for (String dni : USUARIOS.keySet()) {
 				Usuario u = USUARIOS.get(dni);
 				String linea = u.getNombre() + ";" + u.getApellidos() + ";" + u.getDni() + ";" + u.getEmail() + ";"
 						+ u.getContrasena() + ";" + u.getTelefono() + ";" + u.getNumeroTarjeta() + "\n";
 
+				//Escribe la línea con un APPEND, es decir no sobreescribe el fichero.
 				Files.writeString(fichero, linea, StandardOpenOption.APPEND);
 			}
 
@@ -87,8 +113,9 @@ public class Persistencia {
 			e.printStackTrace();
 		}
 	}
-	
-	//Este método es para mostrar por la consola los usuarios del TreeMap, es para pruebas.
+
+	/* Este método es para mostrar por la consola los usuarios del TreeMap, 
+	 * es para pruebas. */
 
 	public static void listarUsuariosTreeMap() {
 		if (USUARIOS.isEmpty()) {
@@ -105,9 +132,9 @@ public class Persistencia {
 		}
 		System.out.println("-------------------------------------------------");
 	}
-	
-	//Este método es para mostrar por la consola los usuarios del fichero, es para pruebas.
 
+	/* Este método es para mostrar por la consola los usuarios del fichero, 
+	 * es para pruebas.*/
 
 	public static void listarUsuariosFichero() {
 		System.out.println("Usuarios registrados: (Esto es el FICHERO físico)");
@@ -134,5 +161,24 @@ public class Persistencia {
 			System.err.println("Error al leer el fichero: " + e.getMessage());
 		}
 	}
+
+	//-----------------------------------------------------------
+
+	// Gestión CRUD de usuarios
+
+	public static void altaUsuarios(Usuario u) {
+		USUARIOS.put(u.getDni(), u);
+		escribirPersistencia();
+	}
+
+	public static void bajaUsuarios(Usuario u) {
+		USUARIOS.remove(u.getDni());
+		escribirPersistencia();
+	}
+
+	public static void modificarUsuario() {
+		escribirPersistencia();
+	}
+
 
 }
