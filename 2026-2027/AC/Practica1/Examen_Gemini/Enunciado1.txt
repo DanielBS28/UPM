@@ -1,0 +1,19 @@
+Enunciado del Examen de Prueba
+
+Se desea implementar un programa en ensamblador MIPS64 para procesar los datos de un sensor.
+
+    Datos:
+
+        En la memoria de datos, a partir de la dirección 0x150, se encuentra un vector llamado medidas formado por 6 elementos de tipo .word32 (enteros de 32 bits con signo).
+
+        Valores iniciales del vector: 10, 20, 30, 40, 50, 60.
+
+    Operación a realizar:
+
+        El programa debe comenzar en la dirección 0x0 del segmento de código.
+
+        Debe recorrer el vector de principio a fin (recorrido ascendente) y sumar el valor constante 15 a cada uno de sus elementos, sobreescribiendo el nuevo resultado en la misma posición de memoria del vector.
+
+        Utilice una estructura de bucle postcondicional (do-while).
+
+        Al finalizar el recorrido de todos los elementos, el programa debe detenerse con la instrucción halt.
