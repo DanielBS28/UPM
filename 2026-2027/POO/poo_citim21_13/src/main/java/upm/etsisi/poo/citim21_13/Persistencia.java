@@ -63,6 +63,9 @@ public class Persistencia {
 			while ((linea = bf.readLine()) != null) {
 
 				String[] campos = linea.split(";");
+				for (int i = 0; i < campos.length; i++)
+				    campos[i] = campos[i].trim();
+				
 
 				USUARIOS.put(campos[2], new Usuario(campos[0], // Nombre
 						campos[1], // Apellidos

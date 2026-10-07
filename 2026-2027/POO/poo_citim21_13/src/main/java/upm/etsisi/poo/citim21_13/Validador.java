@@ -24,18 +24,45 @@ public class Validador {
     }
 	
 	public static boolean validarCorreo(String correo) {
-		if (correo == null) {
-			return false;
-		}
-		
-		int indiceArroba = correo.indexOf('@');
-		int indicePunto = correo.indexOf('.');
-		
-		return indiceArroba > 0
-			&& indicePunto > indiceArroba + 1
-			&& indiceArroba == correo.lastIndexOf('@')
-			&& indicePunto == correo.lastIndexOf('.')
-			&& correo.length() - indicePunto - 1 == 3;
+	    if (correo == null) {
+	        return false;
+	    }
+
+	    // Comprobar que existe exactamente un caracter '@'
+	    int indiceArroba = correo.indexOf('@');
+	    if (indiceArroba <= 0 || indiceArroba != correo.lastIndexOf('@')) {
+	        return false;
+	    }
+
+	    // Parte local antes de la @
+	    String parteLocal = correo.substring(0, indiceArroba);
+	    // Parte del dominio completo despues de la @
+	    String parteDominio = correo.substring(indiceArroba + 1);
+
+	    if (parteLocal.isEmpty()) {
+	        return false;
+	    }
+
+	    // Aquí obtenemos el último punto que aparezca en el correo. 
+	    int ultimoPunto = parteDominio.lastIndexOf('.');
+	    if (ultimoPunto <= 0) {
+	        // Si no hay punto o está en la primera posición por ejemplo . @.com, no está bien.
+	        return false;
+	    }
+
+	    // Aquí comprobamos que el dominio entre la @ y el último . no este vacío.
+	    String dominio = parteDominio.substring(0, ultimoPunto);
+	    if (dominio.isEmpty()) {
+	        return false;
+	    }
+
+	    // Esto es para comprobar que el dominio sea de 3 caracteres
+	    String extension = parteDominio.substring(ultimoPunto + 1);
+	    if (extension.length() != 3) {
+	        return false;
+	    }
+
+	    return true;
 	}
 	public static boolean validarTarjeta(String tarjeta) {
 		if (tarjeta == null || tarjeta.length() != 16) {

@@ -23,7 +23,9 @@ public class LecturaComandos {
             try {
                 lectorBuffer = new BufferedReader(new FileReader(ficheroTerminal));
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+            	System.out.println("Error: no se ha encontrado el fichero " + args[0]);
+            	finalizarPrograma();
+            	return;
             }
         }
 
@@ -35,7 +37,7 @@ public class LecturaComandos {
         String comandoActual = "";
 
         try {
-            while ((comandoActual = obtenerSiguienteComando()) != null && !comandoActual.equalsIgnoreCase("exit")) {
+            while ((comandoActual = obtenerSiguienteComando()) != null && !comandoActual.trim().equalsIgnoreCase("exit")) {
             	//Analizamos el comando actual
                 GestorComandos.analizarComando(comandoActual);
             }

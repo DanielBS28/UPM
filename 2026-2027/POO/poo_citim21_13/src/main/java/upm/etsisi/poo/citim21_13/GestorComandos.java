@@ -55,12 +55,28 @@ public class GestorComandos {
 				break;
 
 			case "HELP":
-				System.out.println("HELP todavía no implementado.");
+				if (partes.length != 1) {
+					System.out.println("Error: HELP no requiere argumentos");
+					return;
+				}
+				mostrarHelp();
 				break;
 
 			default:
 				System.out.println("Error: comando no reconocido: " + partes[0]);
 		}
+	}
+	
+	private static void mostrarHelp() {
+		
+		System.out.println("--- AYUDA DEL COMANDO HELP ---\n");
+		
+		System.out.println("USER CREATE;<nombre>;<apellidos>;<dni>;<correo>;<contraseña>;<telefono>;<tarjeta>\n" +
+				"USER DELETE;<correo>;<contraseña>\n" +
+				"USER UPDATE;<correo>;<contraseña>;<campo>;<valor>\n" +
+				"HELP\n" +
+				"EXIT");
+		
 	}
 
 
@@ -335,5 +351,6 @@ public class GestorComandos {
 		} //Primer nivel nivel de comprobaciones
 		
 	}
+
 
 }
