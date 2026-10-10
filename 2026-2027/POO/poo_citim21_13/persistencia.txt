@@ -1,5 +1,5 @@
-Ana;Garcia Lopez;12345678Z;ana@correo.com;Clave1!;699999999;1234567890123456
-David;Fernandez Perez;45678901G;davidfernandez@correo.com;Clave4 !;645678901;4567890123456789
-Elena;Navarro Ortiz;56789012B;elenanavarro@correo.com;Clave5 !;656789012;5678901234567890
-Javier;Torres Vega;67890123B;javiertorres@correo.com;Clave6 !;667890123;6789012345678901
+Ana;Garcia Lopez;12345678Z;ana.nueva@correo.com;Clave1!;699999999;1234567890123456
+David;Fernandez Perez;45678901G;davidfernandez@correo.com;Clave4!;645678901;4567890123456789
+Elena;Navarro Ortiz;56789012B;elenanavarro@correo.com;Clave5!;656789012;5678901234567890
+Javier;Torres Vega;67890123B;javiertorres@correo.com;Clave6!;667890123;6789012345678901
 Antonio;Lopez Martin;82506021F;antonio@cni.com;Otra2#;623456789;9876543210987654
