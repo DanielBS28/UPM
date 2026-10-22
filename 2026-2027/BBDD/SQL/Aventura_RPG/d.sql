@@ -1,0 +1,1 @@
+select * from Personajes_RPG where nombre like 'M%';

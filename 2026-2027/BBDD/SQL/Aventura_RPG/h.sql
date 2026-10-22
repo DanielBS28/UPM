@@ -1,0 +1,1 @@
+select * from Personajes_RPG where clase != 'Mago' or puntos_vida > 3000;
