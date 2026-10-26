@@ -1,0 +1,1 @@
+select * from Personajes_RPG where fecha_creacion between '2020-01-01' AND '2021-12-31'

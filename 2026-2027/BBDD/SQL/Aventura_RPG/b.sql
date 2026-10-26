@@ -1,0 +1,1 @@
+select * from Personajes_RPG where puntos_vida >= 2900;

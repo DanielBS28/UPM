@@ -1,0 +1,1 @@
+select * from Personajes_RPG where gremio is null
