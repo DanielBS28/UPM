@@ -4,4 +4,4 @@ FROM author a
     INNER JOIN article art on art.DOI = aa.DOI
     INNER JOIN author_affiliation af on af.author_id = a.author_id
     INNER JOIN affiliation affl on affl.affiliation_id = af.affiliation_id
-WHERE affiliation_name = 'Universidad Politénica de Madrid';
+WHERE affiliation_name = 'Universidad Politécnica de Madrid';
