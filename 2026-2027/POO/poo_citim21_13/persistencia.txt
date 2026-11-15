@@ -1,3 +1,5 @@
+Marta;Sanchez Perez;00000000T;marta@correo.com;Marta4 %;645678901;2222333344445555
+Laura;Martin Ruiz;11111111H;laura@correo.com;Laura3$;634567890;1111222233334444
 Ana;Garcia Lopez;12345678Z;ana.nueva@correo.com;Clave1!;699999999;1234567890123456
 David;Fernandez Perez;45678901G;davidfernandez@correo.com;Clave4!;645678901;4567890123456789
 Elena;Navarro Ortiz;56789012B;elenanavarro@correo.com;Clave5!;656789012;5678901234567890

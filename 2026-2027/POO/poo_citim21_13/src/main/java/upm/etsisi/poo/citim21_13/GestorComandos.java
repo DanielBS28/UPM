@@ -20,65 +20,80 @@ public class GestorComandos {
 			partes[i] = partes[i].trim();
 		}
 
-		// Identificar el comando
-		switch (partes[0].toUpperCase()) {
+		//Identificación del comando actual al enumerado
+		ComandoApp comandoValidado = ComandoApp.obtenerComando(partes[0]);
 
-			case "USER CREATE":
+		if (comandoValidado == null) {
+			System.out.println("Error: comando no reconocido: " + partes[0]);
+			return;
+		}
 
-				// Aqui esta contado 8 por el comando USER CREATE + argumentos
-				if (partes.length != 8) {
+		switch (comandoValidado) {
 
-					System.out.println("Error: USER CREATE requiere 7 argumentos.");
-					return;
-				}
-				crearUsuario(partes);
-				break;
+		case USER_CREATE:
+			if (partes.length != 8) {
+				System.out.println("Error: USER CREATE requiere 7 argumentos.");
+				return;
+			}
+			crearUsuario(partes);
+			break;
 
-			case "USER DELETE":
+		case USER_DELETE:
+			if (partes.length != 3) {
+				System.out.println("Error: USER DELETE requiere 2 argumentos");
+				return;
+			}
+			eliminarUsuario(partes);
+			break;
 
-				// Aqui esta contado 3 por el comando USER DELETE + argumentos
-				if (partes.length != 3) {
-					System.out.println("Error: USER DELETE requiere 2 argumentos");
-					return;
-				}
-				eliminarUsuario(partes);
-				break;
+		case USER_UPDATE:
+			if (partes.length != 5) {
+				System.out.println("Error: USER UPDATE requiere 4 argumentos");
+				return;
+			}
+			modificarUsuario(partes);
+			break;
 
-			case "USER UPDATE":
+		case SYSTEM_DATE:
+			if (partes.length != 2) {
+				System.out.println("Error: SYSTEM DATE requiere 1 argumento.");
+				return;
+			}
+			modificarFechaSistema(partes);
+			break;
 
-				// Aqui esta contado 5 por el comando USER UPDATE + argumentos
-				if (partes.length != 5) {
-					System.out.println("Error: USER UPDATE requiere 2 argumentos");
-					return;
-				}
-				modificarUsuario(partes);
-				break;
+		case SYSTEM_PRICE:
+			if (partes.length != 2) {
+				System.out.println("Error: SYSTEM PRICE requiere 1 argumento.");
+				return;
+			}
+			modificarPrecioSistema(partes);
+			break;
 
-			case "HELP":
-				if (partes.length != 1) {
-					System.out.println("Error: HELP no requiere argumentos");
-					return;
-				}
-				mostrarHelp();
-				break;
+		case HELP:
+			if (partes.length != 1) {
+				System.out.println("Error: HELP no requiere argumentos");
+				return;
+			}
+			mostrarHelp();
+			break;
 
-			default:
-				System.out.println("Error: comando no reconocido: " + partes[0]);
+
+		default:	
+			System.out.println("Error: comando no reconocido: " + comandoValidado.name().replace("_", " "));
 		}
 	}
-	
+
 	private static void mostrarHelp() {
-		
 		System.out.println("--- AYUDA DEL COMANDO HELP ---\n");
-		
 		System.out.println("USER CREATE;<nombre>;<apellidos>;<dni>;<correo>;<contraseña>;<telefono>;<tarjeta>\n" +
 				"USER DELETE;<correo>;<contraseña>\n" +
 				"USER UPDATE;<correo>;<contraseña>;<campo>;<valor>\n" +
+				"SYSTEM DATE;<yyyy-MM-dd>\n" +
+				"SYSTEM PRICE;<Precio>\n" +
 				"HELP\n" +
 				"EXIT");
-		
 	}
-
 
 	// Metodo auxiliar para buscar directamente devolviendo un objeto
 	private static Usuario buscarUsuarioPorCorreo(String correo) {
@@ -93,32 +108,31 @@ public class GestorComandos {
 		return null;
 	}
 
-
-
 	private static void crearUsuario(String[] campos) {
 
-		// Formato de comando: USER CREATE;Nombre;Apellidos;DNI;Correo;Contrasena;Telefono;Tarjeta
+		// Formato de comando: USER
+		// CREATE;Nombre;Apellidos;DNI;Correo;Contrasena;Telefono;Tarjeta
 
 		boolean error = false;
 
-		if (!Validador.validarDNI(campos[3])) {
+		if (!Usuario.validarDNI(campos[3])) {
 			System.out.println("Error: el DNI no es válido.");
 			error = true;
 		}
 
-		if (!Validador.validarCorreo(campos[4])) {
+		if (!Usuario.validarCorreo(campos[4])) {
 			System.out.println("Error: el correo no es válido.");
 
 			error = true;
 		}
 
-		if (!Validador.validarTarjeta(campos[7])) {
+		if (!Usuario.validarTarjeta(campos[7])) {
 			System.out.println("Error: el número de tarjeta no es válido.");
 
 			error = true;
 		}
 
-		if (!Validador.validarContraseña(campos[5])) {
+		if (!Usuario.validarContraseña(campos[5])) {
 			System.out.println("Error: la contraseña no es válida.");
 
 			error = true;
@@ -138,43 +152,66 @@ public class GestorComandos {
 
 		if (!error) {
 			/*
-			El metodo guarda la informacion en un usuario que posteriormente se mete en
-			el treemap con .AltaUsuarios(u) que tiene .escribirPersistencia()
+			 * El metodo guarda la informacion en un usuario que posteriormente se mete en
+			 * el treemap con .AltaUsuarios(u) que tiene .escribirPersistencia()
 			 */
 
-			Persistencia.altaUsuarios(new Usuario(campos[1], campos[2], campos[3], campos[4], campos[5], campos[6], campos[7]));
+			Persistencia.altaUsuarios(
+					new Usuario(campos[1], campos[2], campos[3], campos[4], campos[5], campos[6], campos[7]));
 			System.out.println("El usuario se ha creado correctamente");
 		}
 
 	}
+	
+	private static void modificarFechaSistema(String[] partes) {
+		try {
+			java.time.LocalDate nuevaFecha = java.time.LocalDate.parse(partes[1]);
+			GestorParque.getInstancia().setFechaActual(nuevaFecha);
+		} catch (java.time.format.DateTimeParseException e) {
+			System.out.println("Error: el formato de fecha no es válido. Debe ser yyyy-MM-dd.");
+		}
+	}
 
-	private static void eliminarUsuario(String[] campos){
+	private static void modificarPrecioSistema(String[] partes) {
+		try {
+			double nuevoPrecio = Double.parseDouble(partes[1]);
+			if (nuevoPrecio > 0) {
+				GestorParque.getInstancia().setPrecioActual(nuevoPrecio);
+			} else {
+				System.out.println("Error: el precio debe ser una cantidad válida y positiva.");
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Error: formato de precio incorrecto.");
+		}
+	}
+
+	private static void eliminarUsuario(String[] campos) {
 
 		// Formato de comando: USER DELETE;Correo;Contrasena
 
-		boolean error = false; //D
+		boolean error = false; // D
 
 		/*
-		Comprobaciones básicas de formato (correo y contraseña)
+		 * Comprobaciones básicas de formato (correo y contraseña)
+		 * 
+		 * CUIDADO: Aqui la disposción de los campos es diferente que en crear usuario
+		 */
 
-		CUIDADO: Aqui la disposción de los campos es diferente que en crear usuario
-		*/
-
-		if (!Validador.validarCorreo(campos[1])) {
+		if (!Usuario.validarCorreo(campos[1])) {
 			System.out.println("Error: el correo no es válido.");
 
 			error = true;
 		}
 
-		if (!Validador.validarContraseña(campos[2])) {
+		if (!Usuario.validarContraseña(campos[2])) {
 			System.out.println("Error: la contraseña no es válida.");
 
 			error = true;
 		}
 
-		//D con posiciones
+		// D con posiciones
 
-		//-------------------------------------------------------------
+		// -------------------------------------------------------------
 
 		// Comprobaciones de existencia (Usuario existe y contraseña valida de usuario)
 
@@ -192,7 +229,7 @@ public class GestorComandos {
 			error = true;
 		}
 
-		//-------------------------------------------------------------
+		// -------------------------------------------------------------
 
 		// Si todas las comprobaciones son correctas, delegamos en Persistencia
 		if (!error) {
@@ -209,148 +246,138 @@ public class GestorComandos {
 		boolean emailContraseñaExistentes = false;
 		boolean errorCampo = false;
 
-		//-------------------------------------------------------------
+		// -------------------------------------------------------------
 		// Comprobaciones básicas de formato (Correo y contraseña)
 
-
-		if (!Validador.validarCorreo(campos[1])) {
+		if (!Usuario.validarCorreo(campos[1])) {
 			System.out.println("Error: el correo no es válido.");
 			errorContraseñaCorreo = true;
 		}
 
-		if (!Validador.validarContraseña(campos[2])) {
+		if (!Usuario.validarContraseña(campos[2])) {
 			System.out.println("Error: la contraseña no es válida.");
 			errorContraseñaCorreo = true;
 		}
 
-		if(!errorContraseñaCorreo) {
-		//D con posiciones
+		if (!errorContraseñaCorreo) {
+			// D con posiciones
 
-		//-------------------------------------------------------------
+			// -------------------------------------------------------------
 
-		// Buscar usuario y validacion de contraseña
+			// Buscar usuario y validacion de contraseña
 
-		//D con correo y contraseña
+			// D con correo y contraseña
 
-		
-		Usuario usuarioEncontrado = buscarUsuarioPorCorreo(campos[1]);
+			Usuario usuarioEncontrado = buscarUsuarioPorCorreo(campos[1]);
 
-		if (usuarioEncontrado == null) {
-			System.out.println("Error: el usuario no existe");
-			emailContraseñaExistentes = true;
-		}
+			if (usuarioEncontrado == null) {
+				System.out.println("Error: el usuario no existe");
+				emailContraseñaExistentes = true;
+			}
 
-		// Comprobar contraseña guardada del usuario
+			// Comprobar contraseña guardada del usuario
 
-		if (!emailContraseñaExistentes && !usuarioEncontrado.getContrasena().equals(campos[2])) {
-			System.out.println("Error: contraseña incorrecta");
-			emailContraseñaExistentes = true;
-		}
+			if (!emailContraseñaExistentes && !usuarioEncontrado.getContrasena().equals(campos[2])) {
+				System.out.println("Error: contraseña incorrecta");
+				emailContraseñaExistentes = true;
+			}
 
-		//-------------------------------------------------------------
-		if(!emailContraseñaExistentes) {
-		// Convertir el campo recibido al enum CampoUsuario (GESTION CON EL ENUM)
+			// -------------------------------------------------------------
+			if (!emailContraseñaExistentes) {
+				// Convertir el campo recibido al enum CampoUsuario (GESTION CON EL ENUM)
 
-		CampoUsuario campoModificar;
+				CampoUsuario campoModificar;
 
-		try {
+				try {
 
-			campoModificar = CampoUsuario.valueOf(
-					campos[3].toUpperCase()
-			);
+					campoModificar = CampoUsuario.valueOf(campos[3].toUpperCase());
 
-		} catch (IllegalArgumentException e) {
+				} catch (IllegalArgumentException e) {
 
-			System.out.println("Error: el campo " + campos[3] + ", no es valido");
-			return;
-		}
-
-		//-------------------------------------------------------------
-		// Modificar el campo correspondiente
-
-		//B propia private
-
-		switch (campoModificar) {
-
-			case NAME:
-
-				usuarioEncontrado.setNombre(campos[4]);
-				break;
-
-
-			case SURNAME:
-
-				usuarioEncontrado.setApellidos(campos[4]);
-				break;
-
-
-			case EMAIL:
-
-				// Comprobar formato del nuevo correo
-				if (!Validador.validarCorreo(campos[4])) {
-					System.out.println("Error: el nuevo correo no es válido.");
-					errorCampo = true;
-					break;
+					System.out.println("Error: el campo " + campos[3] + ", no es valido");
+					return;
 				}
 
-				// Comprobar que el correo nuevo no pertenece a otro usuario
-				Usuario usuarioMismoCorreo = buscarUsuarioPorCorreo(campos[4]);
+				// -------------------------------------------------------------
+				// Modificar el campo correspondiente
 
-				if (usuarioMismoCorreo != null
-						&& usuarioMismoCorreo != usuarioEncontrado) {
+				// B propia private
 
-					System.out.println("Error: el correo ya está registrado");
+				switch (campoModificar) {
 
-					errorCampo = true;
+				case NAME:
+
+					usuarioEncontrado.setNombre(campos[4]);
 					break;
-				}
-				usuarioEncontrado.setEmail(campos[4]);
-				break;
 
-			case PASSWORD:
+				case SURNAME:
 
-				if (!Validador.validarContraseña(campos[4])) {
-					System.out.println("Error: la nueva contraseña no es válida.");
-
-					errorCampo = true;
+					usuarioEncontrado.setApellidos(campos[4]);
 					break;
-				}
 
-				usuarioEncontrado.setContrasena(campos[4]);
-				break;
+				case EMAIL:
 
+					// Comprobar formato del nuevo correo
+					if (!Usuario.validarCorreo(campos[4])) {
+						System.out.println("Error: el nuevo correo no es válido.");
+						errorCampo = true;
+						break;
+					}
 
-			case PHONE:
+					// Comprobar que el correo nuevo no pertenece a otro usuario
+					Usuario usuarioMismoCorreo = buscarUsuarioPorCorreo(campos[4]);
 
-				usuarioEncontrado.setTelefono(campos[4]);
-				break;
+					if (usuarioMismoCorreo != null && usuarioMismoCorreo != usuarioEncontrado) {
 
+						System.out.println("Error: el correo ya está registrado");
 
-			case CARD:
-
-				if (!Validador.validarTarjeta(campos[4])) {
-					System.out.println("Error: el nuevo número de tarjeta no es válido.");
-
-					errorCampo = true;
+						errorCampo = true;
+						break;
+					}
+					usuarioEncontrado.setEmail(campos[4]);
 					break;
+
+				case PASSWORD:
+
+					if (!Usuario.validarContraseña(campos[4])) {
+						System.out.println("Error: la nueva contraseña no es válida.");
+
+						errorCampo = true;
+						break;
+					}
+
+					usuarioEncontrado.setContrasena(campos[4]);
+					break;
+
+				case PHONE:
+
+					usuarioEncontrado.setTelefono(campos[4]);
+					break;
+
+				case CARD:
+
+					if (!Usuario.validarTarjeta(campos[4])) {
+						System.out.println("Error: el nuevo número de tarjeta no es válido.");
+
+						errorCampo = true;
+						break;
+					}
+
+					usuarioEncontrado.setNumeroTarjeta(campos[4]);
+					break;
+
 				}
 
-				usuarioEncontrado.setNumeroTarjeta(campos[4]);
-				break;
+				// -------------------------------------------------------------
+				// Si la modificación ha sido correcta, actualizar persistencia
+				if (!errorCampo) {
 
-		}
+					Persistencia.modificarUsuario();
+					System.out.println("El usuario se ha modificado correctamente");
+				}
+			} // Segundo nivel de comprobaciones
+		} // Primer nivel nivel de comprobaciones
 
-		//-------------------------------------------------------------
-		// Si la modificación ha sido correcta, actualizar persistencia
-		if (!errorCampo) {
-
-			Persistencia.modificarUsuario();
-			System.out.println("El usuario se ha modificado correctamente");
-		}
-	} //Segundo nivel de comprobaciones
-		} //Primer nivel nivel de comprobaciones
-		
 	}
-
 
 }

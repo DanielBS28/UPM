@@ -4,6 +4,7 @@ public class App {
 
 	public static void main(String[] args) {
 
+		GestorParque.getInstancia();
 		Persistencia.inicializar();
 		LecturaComandos.iniciar(args);
 

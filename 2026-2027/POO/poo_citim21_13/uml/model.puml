@@ -1,0 +1,189 @@
+@startuml
+title Diagrama UML de clases (Sistema de gestion de usuarios y Parque)
+
+
+' ╔════════════════════════════════════════════════╗
+' ║APP - PUNTO DE ENTRADA                          ║
+' ╚════════════════════════════════════════════════╝
+
+class App {
+    + {static} main(String[] args)
+}
+
+
+
+' ╔════════════════════════════════════════════════╗
+' ║GESTOR PARQUE                                   ║
+' ╚════════════════════════════════════════════════╝
+
+class GestorParque {
+    - {static} instancia : GestorParque
+    - fechaActual : LocalDate
+    - precioActual : double
+
+    - GestorParque()
+    + {static} getInstancia() : GestorParque
+    + getFechaActual() : LocalDate
+    + setFechaActual(LocalDate fechaActual)
+    + getPrecioActual() : double
+    + setPrecioActual(double precioActual)
+}
+
+
+
+' ╔════════════════════════════════════════════════╗
+' ║LECTURA DE COMANDOS                             ║
+' ╚════════════════════════════════════════════════╝
+
+class LecturaComandos {
+    + {static} iniciar(String[] args)
+    - {static} obtenerSiguienteComando()
+}
+
+note left of LecturaComandos
+    Admite dos modos de entrada:
+    - Interactivo
+    - Fichero de comandos
+
+    Delega la interpretacion
+    en GestorComandos.
+end note
+
+
+' ╔════════════════════════════════════════════════╗
+' ║GESTOR DE COMANDOS                              ║
+' ╚════════════════════════════════════════════════╝
+
+class GestorComandos {
+    {method} + {static} analizarComando(String linea)
+    {method} - {static} crearUsuario(String[] campos)
+    {method} - {static} eliminarUsuario(String[] campos)
+    {method} - {static} modificarUsuario(String[] campos)
+    {method} - {static} buscarUsuarioPorCorreo(String correo)
+    {method} - {static} modificarFechaSistema(String[] partes)
+    {method} - {static} modificarPrecioSistema(String[] partes)
+}
+
+
+
+' ╔════════════════════════════════════════════════╗
+' ║ENUMERADO DE COMANDOS                           ║
+' ╚════════════════════════════════════════════════╝
+
+enum ComandoApp {
+    USER_CREATE
+    USER_DELETE
+    USER_UPDATE
+    SYSTEM_DATE
+    SYSTEM_PRICE
+    GROUP_CREATE
+    GROUP_ADD
+    GROUP_REMOVE
+    GROUP_DELETE
+    TICKET_CREATE
+    TICKET_DELETE
+    GROUPTICKET_CREATE
+    GROUPTICKET_DELETE
+    ATTRACTION_CREATE
+    ATTRACTION_ENTER
+    ATTRACTION_EXIT
+    ATTRACTION_LIST
+    ATTRACTION_STATUS
+    HELP
+    EXIT
+
+    + {static} obtenerComando(String textoComando) : ComandoApp
+}
+
+
+
+' ╔════════════════════════════════════════════════╗
+' ║USUARIO - MODELO DE DATOS                       ║
+' ╚════════════════════════════════════════════════╝
+
+class Usuario {
+    - dni : String {readOnly}
+    - nombre : String
+    - apellidos : String
+    - email : String
+    - contrasena : String
+    - telefono : String
+    - numeroTarjeta : String
+
+    + Usuario(...)
+
+    {field} // getters y setters //
+    + {static} validarDNI(String dni)
+    + {static} validarCorreo(String correo)
+    + {static} validarContraseña(String clave)
+    + {static} validarTarjeta(String tarjeta)
+}
+
+note right of Usuario::dni
+    Identificador inmutable.
+    Se utiliza como clave
+    del TreeMap en Persistencia.
+end note
+
+
+' ╔════════════════════════════════════════════════╗
+' ║PERSISTENCIA                                    ║
+' ╚════════════════════════════════════════════════╝
+
+class Persistencia {
+    ~ {static} rutaFicheroPersistencia : String
+    ~ {static} ficheroPersistencia : Path
+
+    + {static} inicializar()
+    + {static} lecturaPersistencia()
+    + {static} altaUsuarios(Usuario u)
+    + {static} bajaUsuarios(Usuario u)
+    + {static} modificarUsuario()
+    + {static} escribirPersistencia()
+    + {static} listarUsuariosTreeMap()
+    + {static} listarUsuariosFichero()
+}
+
+note right of Persistencia::USUARIOS
+    Almacenamiento en memoria (TreeMap).
+    Clave: DNI
+    Valor: objeto Usuario
+end note
+
+
+' ╔════════════════════════════════════════════════╗
+' ║ENUMERADO DE CAMPOS                             ║
+' ╚════════════════════════════════════════════════╝
+
+enum CampoUsuario {
+    NAME
+    SURNAME
+    EMAIL
+    PASSWORD
+    PHONE
+    CARD
+}
+
+
+' ╔════════════════════════════════════════════════╗
+' ║DEPENDENCIAS DE USO                             ║
+' ╚════════════════════════════════════════════════╝
+
+App ..> LecturaComandos : inicia >
+App ..> Persistencia : inicializa >
+App ..> GestorParque : inicializa >
+
+LecturaComandos ..> GestorComandos : delega >
+
+GestorComandos ..> Persistencia : solicita operaciones >
+GestorComandos ..> Usuario : gestiona >
+GestorComandos ..> GestorParque : actualiza estado >
+
+
+' ╔════════════════════════════════════════════════╗
+' ║ASOCIACION ESTRUCTURAL                          ║
+' ╚════════════════════════════════════════════════╝
+
+Persistencia "1\n-almacen" --> "0..*\n-usuarios" Usuario : almacena >
+
+@enduml
