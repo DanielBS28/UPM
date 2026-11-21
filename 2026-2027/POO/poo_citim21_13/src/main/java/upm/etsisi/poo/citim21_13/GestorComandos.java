@@ -69,7 +69,39 @@ public class GestorComandos {
 			}
 			modificarPrecioSistema(partes);
 			break;
+			
+		case GROUP_CREATE:
+			if (partes.length != 3) {
+				System.out.println("Error: GROUP CREATE requiere 2 argumentos.");
+				return;
+			}
+			crearGrupo(partes);
+			break;
 
+		case GROUP_ADD:
+			if (partes.length != 3) {
+				System.out.println("Error: GROUP ADD requiere 2 argumentos.");
+				return;
+			}
+			agregarUsuarioGrupo(partes);
+			break;
+
+		case GROUP_REMOVE:
+			if (partes.length != 3) {
+				System.out.println("Error: GROUP REMOVE requiere 2 argumentos.");
+				return;
+			}
+			eliminarUsuarioGrupo(partes);
+			break;
+
+		case GROUP_DELETE:
+			if (partes.length != 2) {
+				System.out.println("Error: GROUP DELETE requiere 1 argumento.");
+				return;
+			}
+			eliminarGrupo(partes);
+			break;
+			
 		case HELP:
 			if (partes.length != 1) {
 				System.out.println("Error: HELP no requiere argumentos");
@@ -379,5 +411,94 @@ public class GestorComandos {
 		} // Primer nivel nivel de comprobaciones
 
 	}
+	
+	private static void crearGrupo(String[] partes) {
+		String identificador = partes[1];
+		String nombre = partes[2];
+		
+		GestorParque gestor = GestorParque.getInstancia();
+		
+		if (gestor.buscarGrupo(identificador) != null) {
+			System.out.println("Error: ya existe un grupo con ese identificador.");
+			return;
+		}
 
+		Grupo nuevoGrupo = new Grupo(identificador, nombre);
+		gestor.registrarGrupo(nuevoGrupo);
+		System.out.println("El grupo se ha creado correctamente.");
+	}
+	
+	private static void agregarUsuarioGrupo(String[] partes) {
+		String identificador = partes[1];
+		String correo = partes[2];
+		
+		GestorParque gestor = GestorParque.getInstancia();
+		Grupo grupo = gestor.buscarGrupo(identificador);
+
+		if (grupo == null) {
+			System.out.println("Error: el grupo no existe.");
+			return;
+		}
+
+		if (!grupo.puedeModificarse()) {
+			System.out.println("Error: el grupo no puede modificarse porque tiene entradas activas.");
+			return;
+		}
+
+		Usuario usuario = buscarUsuarioPorCorreo(correo);
+		if (usuario == null) {
+			System.out.println("Error: el usuario no existe en el sistema.");
+			return;
+		}
+
+		if (grupo.agregarMiembro(usuario)) {
+			System.out.println("El usuario se ha incorporado al grupo correctamente.");
+		} else {
+			System.out.println("Error: el usuario ya pertenece a este grupo.");
+		}
+	}
+	
+	private static void eliminarUsuarioGrupo(String[] partes) {
+		String identificador = partes[1];
+		String correo = partes[2];
+		
+		GestorParque gestor = GestorParque.getInstancia();
+		Grupo grupo = gestor.buscarGrupo(identificador);
+		
+		if (grupo == null) {
+			System.out.println("Error: el grupo no existe.");
+			return;
+		}
+		
+		if (!grupo.puedeModificarse()) {
+			System.out.println("Error: el grupo no puede modificarse porque tiene entradas activas.");
+			return;
+		}
+		
+		if (grupo.eliminarUsuario(correo)) {
+			System.out.println("El usuario se ha eliminado del grupo correctamente.");
+		} else {
+			System.out.println("Error: el usuario no pertenece a este grupo.");
+		}
+	}
+	
+	private static void eliminarGrupo(String[] partes) {
+		String identificador = partes[1];
+		
+		GestorParque gestor = GestorParque.getInstancia();
+		Grupo grupo = gestor.buscarGrupo(identificador);
+
+		if (grupo == null) {
+			System.out.println("Error: el grupo no existe.");
+			return;
+		}
+
+		if (!grupo.puedeModificarse()) {
+			System.out.println("Error: el grupo no puede eliminarse porque tiene entradas activas.");
+			return;
+		}
+
+		gestor.eliminarGrupo(identificador);
+		System.out.println("El grupo se ha eliminado correctamente.");
+	}
 }

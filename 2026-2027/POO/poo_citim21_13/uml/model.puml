@@ -27,6 +27,10 @@ class GestorParque {
     + setFechaActual(LocalDate fechaActual)
     + getPrecioActual() : double
     + setPrecioActual(double precioActual)
+    + getGrupos() : TreeMap<String, Grupo>
+    + buscarGrupo(String identificador) : Grupo
+    + registrarGrupo(Grupo grupo)
+    + eliminarGrupo(String identificador)
 }
 
 
@@ -62,6 +66,10 @@ class GestorComandos {
     {method} - {static} buscarUsuarioPorCorreo(String correo)
     {method} - {static} modificarFechaSistema(String[] partes)
     {method} - {static} modificarPrecioSistema(String[] partes)
+    {method} - {static} crearGrupo(String[] partes)
+    {method} - {static} agregarUsuarioGrupo(String[] partes)
+    {method} - {static} eliminarUsuarioGrupo(String[] partes)
+    {method} - {static} eliminarGrupo(String[] partes)
 }
 
 
@@ -94,6 +102,32 @@ enum ComandoApp {
 
     + {static} obtenerComando(String textoComando) : ComandoApp
 }
+
+
+
+' ╔════════════════════════════════════════════════╗
+' ║GRUPO - MODELO DE DATOS                         ║
+' ╚════════════════════════════════════════════════╝
+
+class Grupo {
+    - identificador : String {readOnly}
+    - nombre : String
+
+    + Grupo(String identificador, String nombre)
+    + getIdentificador() : String
+    + getNombre() : String
+    + setNombre(String nombre)
+    + getMiembros() : TreeMap<String, Usuario>
+    + agregarMiembro(Usuario usuario) : boolean
+    + eliminarMiembro(String correo) : boolean
+    + puedeModificarse() : boolean
+}
+
+note right of Grupo::identificador
+    Identificador inmutable.
+    Se utiliza como clave
+    del TreeMap en GestorParque.
+end note
 
 
 
@@ -178,12 +212,15 @@ LecturaComandos ..> GestorComandos : delega >
 GestorComandos ..> Persistencia : solicita operaciones >
 GestorComandos ..> Usuario : gestiona >
 GestorComandos ..> GestorParque : actualiza estado >
+GestorComandos ..> Grupo : gestiona >
 
 
 ' ╔════════════════════════════════════════════════╗
-' ║ASOCIACION ESTRUCTURAL                          ║
+' ║ASOCIACIONES ESTRUCTURALES                      ║
 ' ╚════════════════════════════════════════════════╝
 
 Persistencia "1\n-almacen" --> "0..*\n-usuarios" Usuario : almacena >
+GestorParque "1" o--> "0..*\n-grupos" Grupo : gestiona >
+Grupo "0..*" o--> "0..*\n-miembros" Usuario : agrupa >
 
 @enduml
