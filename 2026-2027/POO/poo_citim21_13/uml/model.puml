@@ -31,6 +31,13 @@ class GestorParque {
     + buscarGrupo(String identificador) : Grupo
     + registrarGrupo(Grupo grupo)
     + eliminarGrupo(String identificador)
+    + retirarUsuarioDeGrupos(Usuario usuario)
+    + getEntradas() : TreeMap<String, Entrada>
+    + buscarEntrada(String identificador) : Entrada
+    + existeEntrada(String identificador) : boolean
+    + registrarEntrada(Entrada entrada)
+    + eliminarEntrada(String identificador)
+    + usuarioTieneEntradasActivas(Usuario usuario) : boolean
 }
 
 
@@ -70,6 +77,8 @@ class GestorComandos {
     {method} - {static} agregarUsuarioGrupo(String[] partes)
     {method} - {static} eliminarUsuarioGrupo(String[] partes)
     {method} - {static} eliminarGrupo(String[] partes)
+    {method} - {static} crearEntradaIndividual(String[] partes)
+    {method} - {static} eliminarEntradaIndividual(String[] partes)
 }
 
 
@@ -101,6 +110,49 @@ enum ComandoApp {
     EXIT
 
     + {static} obtenerComando(String textoComando) : ComandoApp
+}
+
+
+
+' ╔════════════════════════════════════════════════╗
+' ║ENTRADAS - JERARQUIA DE HERENCIA                ║
+' ╚════════════════════════════════════════════════╝
+
+abstract class Entrada {
+    - identificador : String {readOnly}
+    - fecha : LocalDate {readOnly}
+    - precioBase : double {readOnly}
+
+    + Entrada(String identificador, LocalDate fecha, double precioBase)
+    + getIdentificador() : String
+    + getFecha() : LocalDate
+    + getPrecioBase() : double
+    # calcularPrecioConDescuento(double porcentajeDescuento) : double
+    + getPrecio() : double
+    + esActiva(LocalDate fechaSistema) : boolean
+    + puedeEliminarse(LocalDate fechaSistema) : boolean
+    + esValidaParaFecha(LocalDate fechaSistema) : boolean
+    + {abstract} getUsuarios() : List<Usuario>
+    + {abstract} contieneUsuario(Usuario usuario) : boolean
+}
+
+note right of Entrada::identificador
+    Identificador unico comun
+    para todos los tipos de entrada.
+    Clave del TreeMap en GestorParque.
+end note
+
+class EntradaIndividual {
+    - descuento : double {readOnly}
+    - parteDeGrupo : boolean {readOnly}
+
+    + EntradaIndividual(String identificador, LocalDate fecha, double precioBase, Usuario usuario)
+    + EntradaIndividual(String identificador, LocalDate fecha, double precioBase, Usuario usuario, double descuento, boolean parteDeGrupo)
+    + getUsuario() : Usuario
+    + esParteDeGrupo() : boolean
+    + getPrecio() : double
+    + getUsuarios() : List<Usuario>
+    + contieneUsuario(Usuario usuarioBuscado) : boolean
 }
 
 
@@ -200,6 +252,13 @@ enum CampoUsuario {
 
 
 ' ╔════════════════════════════════════════════════╗
+' ║HERENCIA                                        ║
+' ╚════════════════════════════════════════════════╝
+
+Entrada <|-- EntradaIndividual
+
+
+' ╔════════════════════════════════════════════════╗
 ' ║DEPENDENCIAS DE USO                             ║
 ' ╚════════════════════════════════════════════════╝
 
@@ -213,6 +272,8 @@ GestorComandos ..> Persistencia : solicita operaciones >
 GestorComandos ..> Usuario : gestiona >
 GestorComandos ..> GestorParque : actualiza estado >
 GestorComandos ..> Grupo : gestiona >
+GestorComandos ..> Entrada : gestiona >
+GestorComandos ..> EntradaIndividual : crea >
 
 
 ' ╔════════════════════════════════════════════════╗
@@ -220,7 +281,9 @@ GestorComandos ..> Grupo : gestiona >
 ' ╚════════════════════════════════════════════════╝
 
 Persistencia "1\n-almacen" --> "0..*\n-usuarios" Usuario : almacena >
-GestorParque "1" o--> "0..*\n-grupos" Grupo : gestiona >
+GestorParque "1" *--> "0..*\n-grupos" Grupo : gestiona >
+GestorParque "1" *--> "0..*\n-entradas" Entrada : gestiona >
 Grupo "0..*" o--> "0..*\n-miembros" Usuario : agrupa >
+EntradaIndividual "0..*" --> "1\n-usuario" Usuario : asociada a >
 
 @enduml

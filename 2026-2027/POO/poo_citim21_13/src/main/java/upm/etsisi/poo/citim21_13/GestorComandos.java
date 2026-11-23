@@ -117,14 +117,24 @@ public class GestorComandos {
 	}
 
 	private static void mostrarHelp() {
-		System.out.println("--- AYUDA DEL COMANDO HELP ---\n");
-		System.out.println("USER CREATE;<nombre>;<apellidos>;<dni>;<correo>;<contraseña>;<telefono>;<tarjeta>\n" +
-				"USER DELETE;<correo>;<contraseña>\n" +
-				"USER UPDATE;<correo>;<contraseña>;<campo>;<valor>\n" +
-				"SYSTEM DATE;<yyyy-MM-dd>\n" +
-				"SYSTEM PRICE;<Precio>\n" +
-				"HELP\n" +
-				"EXIT");
+
+	    System.out.println("--- AYUDA DEL COMANDO HELP ---\n");
+
+	    System.out.println("USER CREATE;<nombre>;<apellidos>;<dni>;<correo>;<contraseña>;<telefono>;<tarjeta>\n" +
+	            "USER DELETE;<correo>;<contraseña>\n" +
+	            "USER UPDATE;<correo>;<contraseña>;<campo>;<valor>\n" +
+	            "SYSTEM DATE;<yyyy-MM-dd>\n" +
+	            "SYSTEM PRICE;<precio>\n" +
+	            "GROUP CREATE;<identificador>;<nombre>\n" +
+	            "GROUP ADD;<identificador>;<correo>\n" +
+	            "GROUP REMOVE;<identificador>;<correo>\n" +
+	            "GROUP DELETE;<identificador>\n" +
+	            "TICKET CREATE;<identificador>;<correo>;<fecha>\n" +
+	            "TICKET DELETE;<identificador>\n" +
+	            "GROUPTICKET CREATE;<identificador>;<grupo>;<fecha>\n" +
+	            "GROUPTICKET DELETE;<identificador>\n" +
+	            "HELP\n" +
+	            "EXIT");
 	}
 
 	// Metodo auxiliar para buscar directamente devolviendo un objeto
