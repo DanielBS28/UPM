@@ -32,6 +32,9 @@ class GestorParque {
     + registrarGrupo(Grupo grupo)
     + eliminarGrupo(String identificador)
     + retirarUsuarioDeGrupos(Usuario usuario)
+    + grupoTieneEntradasActivas(Grupo grupo) : boolean
+    + desvincularGrupoDeEntradas(Grupo grupo)
+    + usuarioPerteneceAGrupoBloqueado(Usuario usuario) : boolean
     + getEntradas() : TreeMap<String, Entrada>
     + buscarEntrada(String identificador) : Entrada
     + existeEntrada(String identificador) : boolean
@@ -48,6 +51,7 @@ class GestorParque {
 
 class LecturaComandos {
     + {static} iniciar(String[] args)
+    + {static} finalizarPrograma()
     - {static} obtenerSiguienteComando()
 }
 
@@ -66,19 +70,21 @@ end note
 ' ╚════════════════════════════════════════════════╝
 
 class GestorComandos {
-    {method} + {static} analizarComando(String linea)
-    {method} - {static} crearUsuario(String[] campos)
-    {method} - {static} eliminarUsuario(String[] campos)
-    {method} - {static} modificarUsuario(String[] campos)
-    {method} - {static} buscarUsuarioPorCorreo(String correo)
-    {method} - {static} modificarFechaSistema(String[] partes)
-    {method} - {static} modificarPrecioSistema(String[] partes)
-    {method} - {static} crearGrupo(String[] partes)
-    {method} - {static} agregarUsuarioGrupo(String[] partes)
-    {method} - {static} eliminarUsuarioGrupo(String[] partes)
-    {method} - {static} eliminarGrupo(String[] partes)
-    {method} - {static} crearEntradaIndividual(String[] partes)
-    {method} - {static} eliminarEntradaIndividual(String[] partes)
+     + {static} analizarComando(String linea)
+     - {static} crearUsuario(String[] campos)
+     - {static} eliminarUsuario(String[] campos)
+     - {static} modificarUsuario(String[] campos)
+     - {static} buscarUsuarioPorCorreo(String correo)
+     - {static} modificarFechaSistema(String[] partes)
+     - {static} modificarPrecioSistema(String[] partes)
+     - {static} crearGrupo(String[] partes)
+     - {static} agregarUsuarioGrupo(String[] partes)
+     - {static} eliminarUsuarioGrupo(String[] partes)
+     - {static} eliminarGrupo(String[] partes)
+     - {static} crearEntradaIndividual(String[] partes)
+     - {static} eliminarEntradaIndividual(String[] partes)
+     - {static} crearEntradaGrupo(String[] partes)
+     - {static} eliminarEntradaGrupo(String[] partes)
 }
 
 
@@ -107,7 +113,6 @@ enum ComandoApp {
     ATTRACTION_LIST
     ATTRACTION_STATUS
     HELP
-    EXIT
 
     + {static} obtenerComando(String textoComando) : ComandoApp
 }
@@ -132,6 +137,12 @@ abstract class Entrada {
     + esActiva(LocalDate fechaSistema) : boolean
     + puedeEliminarse(LocalDate fechaSistema) : boolean
     + esValidaParaFecha(LocalDate fechaSistema) : boolean
+    + esEntradaIndividual() : boolean
+    + esEntradaGrupo() : boolean
+    + esParteDeGrupo() : boolean
+    + perteneceAGrupo(Grupo grupo) : boolean
+    + desvincularGrupo(Grupo grupo)
+    + getEntradasGestionadas() : List<Entrada>
     + {abstract} getUsuarios() : List<Usuario>
     + {abstract} contieneUsuario(Usuario usuario) : boolean
 }
@@ -149,11 +160,34 @@ class EntradaIndividual {
     + EntradaIndividual(String identificador, LocalDate fecha, double precioBase, Usuario usuario)
     + EntradaIndividual(String identificador, LocalDate fecha, double precioBase, Usuario usuario, double descuento, boolean parteDeGrupo)
     + getUsuario() : Usuario
+    + esEntradaIndividual() : boolean
     + esParteDeGrupo() : boolean
     + getPrecio() : double
     + getUsuarios() : List<Usuario>
     + contieneUsuario(Usuario usuarioBuscado) : boolean
 }
+
+class EntradaGrupo {
+    + EntradaGrupo(String identificador, LocalDate fecha, double precioBase, Grupo grupo)
+    + getGrupo() : Grupo
+    + getEntradasIndividuales() : List<EntradaIndividual>
+    + esEntradaGrupo() : boolean
+    + perteneceAGrupo(Grupo grupoBuscado) : boolean
+    + desvincularGrupo(Grupo grupoEliminado)
+    + getEntradasGestionadas() : List<Entrada>
+    + {static} calcularDescuento(int numMiembros) : double
+    + getPrecio() : double
+    + getUsuarios() : List<Usuario>
+    + contieneUsuario(Usuario usuarioBuscado) : boolean
+}
+
+note right of EntradaGrupo
+    Compuesta por entradas individuales
+    con ID <idGrupoTicket>:<dni>.
+    No duplica una coleccion de usuarios.
+    La referencia al grupo puede pasar
+    a null si el grupo se elimina.
+end note
 
 
 
@@ -172,7 +206,7 @@ class Grupo {
     + getMiembros() : TreeMap<String, Usuario>
     + agregarMiembro(Usuario usuario) : boolean
     + eliminarMiembro(String correo) : boolean
-    + puedeModificarse() : boolean
+    + contieneMiembro(Usuario usuario) : boolean
 }
 
 note right of Grupo::identificador
@@ -256,6 +290,7 @@ enum CampoUsuario {
 ' ╚════════════════════════════════════════════════╝
 
 Entrada <|-- EntradaIndividual
+Entrada <|-- EntradaGrupo
 
 
 ' ╔════════════════════════════════════════════════╗
@@ -268,16 +303,19 @@ App ..> GestorParque : inicializa >
 
 LecturaComandos ..> GestorComandos : delega >
 
+GestorComandos ..> ComandoApp : clasifica mediante >
+GestorComandos ..> CampoUsuario : utiliza >
 GestorComandos ..> Persistencia : solicita operaciones >
 GestorComandos ..> Usuario : gestiona >
 GestorComandos ..> GestorParque : actualiza estado >
 GestorComandos ..> Grupo : gestiona >
 GestorComandos ..> Entrada : gestiona >
 GestorComandos ..> EntradaIndividual : crea >
+GestorComandos ..> EntradaGrupo : crea >
 
 
 ' ╔════════════════════════════════════════════════╗
-' ║ASOCIACIONES ESTRUCTURALES                      ║
+' ║ASOCIACIONES Y COMPOSICIONES                    ║
 ' ╚════════════════════════════════════════════════╝
 
 Persistencia "1\n-almacen" --> "0..*\n-usuarios" Usuario : almacena >
@@ -285,5 +323,7 @@ GestorParque "1" *--> "0..*\n-grupos" Grupo : gestiona >
 GestorParque "1" *--> "0..*\n-entradas" Entrada : gestiona >
 Grupo "0..*" o--> "0..*\n-miembros" Usuario : agrupa >
 EntradaIndividual "0..*" --> "1\n-usuario" Usuario : asociada a >
+EntradaGrupo "0..1" *--> "1..*\n-entradasIndividuales" EntradaIndividual : compuesta por >
+EntradaGrupo "0..*" --> "0..1\n-grupo" Grupo : asociada a >
 
 @enduml

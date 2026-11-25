@@ -14,10 +14,8 @@ public class EntradaIndividual extends Entrada {
 	}
 
 	public EntradaIndividual(String identificador, LocalDate fecha, double precioBase, Usuario usuario,
-			double descuento, boolean parteDeGrupo) {
-
+							 double descuento, boolean parteDeGrupo) {
 		super(identificador, fecha, precioBase);
-
 		this.usuario = usuario;
 		this.descuento = descuento;
 		this.parteDeGrupo = parteDeGrupo;
@@ -27,6 +25,12 @@ public class EntradaIndividual extends Entrada {
 		return usuario;
 	}
 
+	@Override
+	public boolean esEntradaIndividual() {
+		return true;
+	}
+
+	@Override
 	public boolean esParteDeGrupo() {
 		return parteDeGrupo;
 	}
@@ -41,7 +45,6 @@ public class EntradaIndividual extends Entrada {
 		if (usuario == null) {
 			return List.of();
 		}
-
 		return List.of(usuario);
 	}
 
@@ -50,8 +53,6 @@ public class EntradaIndividual extends Entrada {
 		if (this.usuario == null || usuarioBuscado == null) {
 			return false;
 		}
-
-		return this.usuario.getDni().equals(usuarioBuscado.getDni());
+		return this.usuario.getDni().equalsIgnoreCase(usuarioBuscado.getDni());
 	}
-
 }
