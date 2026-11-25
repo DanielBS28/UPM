@@ -1,0 +1,20 @@
+DELIMITER $$
+CREATE FUNCTION diffPoints(driver1 INTEGER, driver2 INTEGER)
+RETURNS DECIMAL(8,2)
+DETERMINISTIC
+BEGIN
+	-- SIEMPRE LAS VARIABLES AL PRINCIPIO AUNQUE TENGA 2 CONSULTAS
+	DECLARE points1 DECIMAL(8,2);
+	DECLARE points2 DECIMAL(8,2);
+    
+	SELECT SUM(points) INTO points1
+	FROM results
+	WHERE driverId = driver1;
+    
+	SELECT SUM(points) INTO points2
+	FROM results
+	WHERE driverId = driver2;
+    
+	RETURN points1 - points2;
+END $$
+DELIMITER ;
